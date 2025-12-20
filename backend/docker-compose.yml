@@ -1,0 +1,85 @@
+# docker-compose.yml - VERSIÓN CORREGIDA
+version: '3.8'
+
+services:
+  data-acquisition:
+    build: ./data-acquisition
+    ports:
+      - "8001:8001"
+    environment:
+      # Configuración principal
+      - ENV=development
+      - USE_MOCK_MODE=true  # <-- IMPORTANTE: true para desarrollo
+      
+      # AWS config (solo para modo S3)
+      - AWS_ACCESS_KEY_ID=none
+      - AWS_SECRET_ACCESS_KEY=none
+      - AWS_DEFAULT_REGION=us-east-1
+      
+      # Common Crawl config
+      - COMMON_CRAWL_MODE=auto  # auto, s3, http, mock
+      - COMMON_CRAWL_BUCKET=commoncrawl
+      
+      # Límites para pruebas
+      - MAX_RECORDS_PER_FILE=20
+      - MAX_WARC_FILES=3
+      - MAX_TOTAL_RECORDS=50
+      
+      # Database
+      - DATABASE_URL=postgresql://user:password@postgres/newsdb
+      
+      # Logging
+      - LOG_LEVEL=INFO
+      - LOG_FORMAT=json
+    volumes:
+      - ./data-acquisition:/app  # Montar código para hot-reload
+      - ./data:/app/data
+    command: >
+      sh -c "python -c 'from database import init_db; init_db()' &&
+             uvicorn app:app --host 0.0.0.0 --port 8001 --reload"
+    depends_on:
+      - postgres
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: newsdb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d newsdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  
+  # Redis opcional para cache
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+  
+  # pgAdmin para administrar la BD
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@commoncrawl.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
