@@ -1,0 +1,50 @@
+# .gitignore minimalista
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Entornos virtuales
+venv/
+env/
+.venv/
+
+# Archivos de entorno
+.env
+.env.local
+.secrets
+*.key
+
+# Logs y caché
+*.log
+logs/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Base de datos
+*.db
+*.sqlite3
+postgres_data/
+
+# Docker
+docker-compose.override.yml
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema
+.DS_Store
+Thumbs.db
