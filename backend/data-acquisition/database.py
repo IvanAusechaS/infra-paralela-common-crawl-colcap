@@ -269,3 +269,16 @@ def get_stats():
         
     finally:
         session.close()
+
+def check_db_health():
+    """Verificar salud de la base de datos"""
+    session = SessionLocal()
+    try:
+        # IMPORTANTE: Usar text() para la consulta SQL
+        result = session.execute(text("SELECT 1"))
+        return True
+    except Exception as e:
+        logger.error(f"Error verificación BD: {e}")
+        return False
+    finally:
+        session.close()

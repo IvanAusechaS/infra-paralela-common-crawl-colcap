@@ -12,7 +12,7 @@ from commoncrawl_client import CommonCrawlClient
 from database import SessionLocal, NewsArticle, save_articles, get_articles, get_stats
 from models import FetchRequest, FetchResponse, Article
 
-from database import init_db
+from database import init_db, check_db_health
 
 # Configurar logging
 logging.basicConfig(
@@ -83,22 +83,14 @@ async def root():
 @app.get("/health")
 async def health_check():
     """Verificar salud del servicio"""
-    # Verificar conexión a BD
-    db_status = "unknown"
-    try:
-        session = SessionLocal()
-        session.execute("SELECT 1")
-        session.close()
-        db_status = "healthy"
-    except Exception as e:
-        logger.error(f"Error verificación BD: {e}")
-        db_status = "unhealthy"
+    # Verificar conexión a BD usando la función
+    db_healthy = check_db_health()
     
     return {
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
         "service": "data-acquisition",
-        "database": db_status,
+        "database": "healthy" if db_healthy else "unhealthy",
         "mode": os.getenv('USE_MOCK_MODE', 'true'),
         "version": "2.0.0"
     }
