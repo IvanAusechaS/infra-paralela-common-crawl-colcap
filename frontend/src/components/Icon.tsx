@@ -11,6 +11,9 @@ interface IconProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
 }
 
+// Icon map for available icons
+const icons: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {};
+
 const Icon: React.FC<IconProps> = ({ name, className = '', size = 'md' }) => {
   const sizeClasses = {
     sm: 'icon-sm',
@@ -19,11 +22,10 @@ const Icon: React.FC<IconProps> = ({ name, className = '', size = 'md' }) => {
     xl: 'icon-xl',
   };
 
-  let IconComponent;
-  try {
-    IconComponent = require(`../assets/icons/${name}.svg?react`).default;
-  } catch (error) {
-    console.error(`Icon "${name}" not found`);
+  const IconComponent = icons[name];
+  
+  if (!IconComponent) {
+    console.warn(`Icon "${name}" not found`);
     return null;
   }
 

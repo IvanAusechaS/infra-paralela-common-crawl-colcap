@@ -2,7 +2,7 @@
  * AnalysisPage Styles
  */
 
-@import '../styles/global.scss';
+@use '../styles/global.scss' as *;
 
 .analysis-page {
   animation: fadeIn 0.5s ease-in;
@@ -57,7 +57,7 @@
     border: 2px solid $border-color;
     border-radius: 8px;
     font-size: 14px;
-    transition: $transition;
+    transition: $transition-all;
 
     &:focus {
       outline: none;
@@ -85,7 +85,7 @@
   cursor: pointer;
   padding: 12px;
   border-radius: 8px;
-  transition: $transition;
+  transition: $transition-all;
 
   &:hover {
     background: rgba($primary-color, 0.05);

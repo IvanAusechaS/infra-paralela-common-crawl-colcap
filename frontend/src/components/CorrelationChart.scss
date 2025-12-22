@@ -2,7 +2,7 @@
  * CorrelationChart Styles
  */
 
-@import '../styles/global.scss';
+@use '../styles/global.scss' as *;
 
 .correlation-chart {
   width: 100%;

@@ -3,7 +3,7 @@
  * Centralized notification system using react-toastify
  */
 
-import { toast, ToastOptions } from 'react-toastify';
+import { toast, type ToastOptions } from 'react-toastify';
 
 const defaultOptions: ToastOptions = {
   position: 'top-right',

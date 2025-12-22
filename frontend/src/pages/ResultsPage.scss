@@ -2,7 +2,7 @@
  * ResultsPage Styles
  */
 
-@import '../styles/global.scss';
+@use '../styles/global.scss' as *;
 
 .results-page {
   animation: fadeIn 0.5s ease-in;
@@ -126,11 +126,11 @@
         transition: width 0.5s ease;
 
         &.positive {
-          background: linear-gradient(90deg, $secondary-color, darken($secondary-color, 10%));
+          background: linear-gradient(90deg, $secondary-color, $secondary-dark);
         }
 
         &.negative {
-          background: linear-gradient(90deg, $danger-color, darken($danger-color, 10%));
+          background: linear-gradient(90deg, $danger-color, #b91c1c);
         }
       }
     }
