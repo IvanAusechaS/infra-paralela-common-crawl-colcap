@@ -1,0 +1,28 @@
+# ====================
+# ConfigMap - Shared Configuration
+# ====================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: news2market-config
+  namespace: news2market
+data:
+  # Database configuration
+  DATABASE_HOST: postgres-service
+  DATABASE_PORT: "5432"
+  DATABASE_NAME: news2market
+  DATABASE_USER: news2market
+  
+  # Redis configuration
+  REDIS_HOST: redis-service
+  REDIS_PORT: "6379"
+  
+  # Service ports
+  API_GATEWAY_PORT: "8000"
+  DATA_ACQUISITION_PORT: "8001"
+  TEXT_PROCESSOR_PORT: "8002"
+  CORRELATION_SERVICE_PORT: "8003"
+  
+  # Application configuration
+  LOG_LEVEL: INFO
+  USE_MOCK_COLCAP: "true"

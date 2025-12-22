@@ -1,0 +1,10 @@
+# ====================
+# Namespace
+# ====================
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: news2market
+  labels:
+    name: news2market
+    environment: production

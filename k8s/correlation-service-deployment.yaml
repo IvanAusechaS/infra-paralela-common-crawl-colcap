@@ -1,0 +1,111 @@
+# ====================
+# Correlation Service Deployment
+# ====================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: correlation-service
+  namespace: news2market
+  labels:
+    app: correlation-service
+    tier: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: correlation-service
+  template:
+    metadata:
+      labels:
+        app: correlation-service
+        tier: backend
+    spec:
+      containers:
+      - name: correlation-service
+        image: ${ECR_REGISTRY}/correlation-service:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8003
+          name: http
+        env:
+        - name: SERVICE_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: news2market-config
+              key: CORRELATION_SERVICE_PORT
+        - name: DATABASE_URL
+          value: postgresql+asyncpg://$(DATABASE_USER):$(DATABASE_PASSWORD)@$(DATABASE_HOST):$(DATABASE_PORT)/$(DATABASE_NAME)
+        - name: DATABASE_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: news2market-config
+              key: DATABASE_HOST
+        - name: DATABASE_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: news2market-config
+              key: DATABASE_PORT
+        - name: DATABASE_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: news2market-config
+              key: DATABASE_NAME
+        - name: DATABASE_USER
+          valueFrom:
+            secretKeyRef:
+              name: news2market-secrets
+              key: DATABASE_USER
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: news2market-secrets
+              key: DATABASE_PASSWORD
+        - name: USE_MOCK_COLCAP
+          valueFrom:
+            configMapKeyRef:
+              name: news2market-config
+              key: USE_MOCK_COLCAP
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: news2market-config
+              key: LOG_LEVEL
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8003
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8003
+          initialDelaySeconds: 10
+          periodSeconds: 5
+---
+# ====================
+# Correlation Service
+# ====================
+apiVersion: v1
+kind: Service
+metadata:
+  name: correlation-service
+  namespace: news2market
+  labels:
+    app: correlation-service
+spec:
+  selector:
+    app: correlation-service
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8003
+    targetPort: 8003
+  type: ClusterIP
