@@ -1,0 +1,224 @@
+/**
+ * Global Styles - News2Market
+ * 
+ * Variables, mixins y estilos globales
+ */
+
+// ========================
+// Variables
+// ========================
+$primary-color: #2563eb;
+$secondary-color: #10b981;
+$danger-color: #ef4444;
+$warning-color: #f59e0b;
+$text-primary: #1f2937;
+$text-secondary: #6b7280;
+$bg-primary: #ffffff;
+$bg-secondary: #f3f4f6;
+$border-color: #e5e7eb;
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+$transition: all 0.3s ease;
+
+// ========================
+// Mixins
+// ========================
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin card {
+  background: $bg-primary;
+  border-radius: 12px;
+  box-shadow: $shadow-md;
+  padding: 24px;
+  transition: $transition;
+
+  &:hover {
+    box-shadow: $shadow-lg;
+  }
+}
+
+@mixin button-base {
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: $transition;
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// ========================
+// Reset & Base
+// ========================
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: $text-primary;
+  background-color: $bg-secondary;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+// ========================
+// Layout
+// ========================
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+// ========================
+// Typography
+// ========================
+h1 {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: $text-primary;
+}
+
+h2 {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: $text-primary;
+}
+
+h3 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: $text-primary;
+}
+
+p {
+  color: $text-secondary;
+  margin-bottom: 12px;
+}
+
+// ========================
+// Components
+// ========================
+.button {
+  @include button-base;
+
+  &.primary {
+    background: $primary-color;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background: darken($primary-color, 10%);
+    }
+  }
+
+  &.secondary {
+    background: $secondary-color;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background: darken($secondary-color, 10%);
+    }
+  }
+
+  &.outline {
+    background: transparent;
+    border: 2px solid $primary-color;
+    color: $primary-color;
+
+    &:hover:not(:disabled) {
+      background: $primary-color;
+      color: white;
+    }
+  }
+}
+
+.card {
+  @include card;
+}
+
+.loading {
+  @include flex-center;
+  padding: 48px;
+
+  .spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid $border-color;
+    border-top-color: $primary-color;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  background: rgba($danger-color, 0.1);
+  color: $danger-color;
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid $danger-color;
+}
+
+.success {
+  background: rgba($secondary-color, 0.1);
+  color: $secondary-color;
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid $secondary-color;
+}
+
+// ========================
+// Responsive
+// ========================
+@media (max-width: 768px) {
+  .main-content {
+    padding: 16px;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  h2 {
+    font-size: 22px;
+  }
+}
