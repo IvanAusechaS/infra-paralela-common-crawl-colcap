@@ -215,7 +215,7 @@ async def calculate_correlation(request: CorrelationRequest):
         )
         
         # 5. Guardar resultados en base de datos
-        save_correlation_result(
+        await save_correlation_result(
             job_id=job_id,
             start_date=request.start_date,
             end_date=request.end_date,

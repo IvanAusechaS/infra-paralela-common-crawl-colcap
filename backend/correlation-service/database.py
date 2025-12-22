@@ -67,6 +67,25 @@ class CorrelationResult(Base):
     
     def __repr__(self) -> str:
         return f"<CorrelationResult(id={self.id}, job_id='{self.job_id}', dates={self.start_date} to {self.end_date})>"
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        Convertir a diccionario para respuestas JSON
+        
+        Returns:
+            Dict: Representación del resultado
+        """
+        return {
+            'job_id': self.job_id,
+            'start_date': self.start_date,
+            'end_date': self.end_date,
+            'lag_days': self.lag_days,
+            'correlations': self.correlations,
+            'p_values': self.p_values,
+            'insights': self.insights,
+            'sample_size': self.sample_size,
+            'created_at': self.created_at.isoformat() if self.created_at else None
+        }
 
 # ========================
 # Database Operations

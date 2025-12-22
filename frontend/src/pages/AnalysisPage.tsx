@@ -7,6 +7,7 @@
 import { useState } from 'react';
 import { api, type CorrelationRequest, type CorrelationResponse } from '../services/api';
 import CorrelationChart from '../components/CorrelationChart';
+import { notify } from '../services/api';
 import './AnalysisPage.scss';
 
 const AnalysisPage = () => {
@@ -65,6 +66,7 @@ const AnalysisPage = () => {
 
       const response = await api.calculateCorrelation(request);
       setResult(response);
+      notify.success('Análisis completado exitosamente');
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Error al calcular correlación');
     } finally {
@@ -75,7 +77,7 @@ const AnalysisPage = () => {
   return (
     <div className="analysis-page">
       <header className="page-header">
-        <h1>📊 Análisis de Correlación</h1>
+        <h1>Análisis de Correlación</h1>
         <p>Configura los parámetros para analizar la correlación entre noticias y COLCAP</p>
       </header>
 
