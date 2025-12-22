@@ -11,6 +11,7 @@ import HomePage from './pages/HomePage';
 import AnalysisPage from './pages/AnalysisPage';
 import ResultsPage from './pages/ResultsPage';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import './styles/global.scss';
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
             <Route path="/results" element={<ResultsPage />} />
           </Routes>
         </main>
+        <Footer />
         <ToastContainer />
       </div>
     </Router>
