@@ -240,25 +240,32 @@
 .cta-section {
   text-align: center;
   padding: $spacing-3xl $spacing-xl;
-  background: linear-gradient(135deg, rgba(30, 64, 175, 0.08), rgba(5, 150, 105, 0.08));
+  background: $bg-dark;
   border-radius: $radius-xl;
-  box-shadow: $shadow-lg;
+  box-shadow: $shadow-xl;
   animation: scaleIn 0.5s ease-out 0.3s backwards;
+  margin-top: $spacing-3xl;
 
   h2 {
     font-family: $font-heading;
     margin-bottom: $spacing-md;
+    color: $text-inverse;
   }
 
   p {
     font-size: $font-size-lg;
     margin-bottom: $spacing-xl;
-    color: $text-secondary;
+    color: rgba($text-inverse, 0.8);
   }
 
   .button {
     font-size: $font-size-lg;
     padding: $spacing-lg $spacing-2xl;
+    background-color: $primary-light;
+    
+    &:hover {
+      background-color: $primary-color;
+    }
   }
 }
 

@@ -15,6 +15,8 @@ const HomePage = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    let notificationShown = false;
+    
     const fetchData = async () => {
       try {
         const healthy = await api.healthCheck();
@@ -23,13 +25,22 @@ const HomePage = () => {
         if (healthy) {
           const statsData = await api.getProcessingStats();
           setStats(statsData);
-          notify.success('Sistema conectado correctamente');
+          if (!notificationShown) {
+            notify.success('Sistema conectado correctamente');
+            notificationShown = true;
+          }
         } else {
-          notify.warning('Sistema no disponible');
+          if (!notificationShown) {
+            notify.warning('Sistema no disponible');
+            notificationShown = true;
+          }
         }
       } catch (error) {
         console.error('Error fetching data:', error);
-        notify.error('Error al conectar con el sistema');
+        if (!notificationShown) {
+          notify.error('Error al conectar con el sistema');
+          notificationShown = true;
+        }
       } finally {
         setLoading(false);
       }
