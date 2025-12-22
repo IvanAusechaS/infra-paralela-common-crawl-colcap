@@ -106,6 +106,19 @@ export const api = {
   },
 
   /**
+   * Obtener workers activos
+   */
+  async getActiveWorkers(): Promise<{ active_workers: number; workers: any[] }> {
+    try {
+      const response = await apiClient.get("/text-processor/workers/active");
+      return response.data;
+    } catch (error) {
+      console.error("Error getting active workers:", error);
+      return { active_workers: 0, workers: [] };
+    }
+  },
+
+  /**
    * Calcular correlación
    */
   async calculateCorrelation(

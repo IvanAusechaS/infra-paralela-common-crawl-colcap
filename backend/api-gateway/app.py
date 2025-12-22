@@ -206,6 +206,17 @@ async def proxy_stats():
         logger.error(f"Error obteniendo stats: {e}")
         return {}
 
+@app.get("/api/v1/text-processor/workers/active")
+async def proxy_active_workers():
+    """Proxy para obtener workers activos"""
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            response = await client.get(f"{SERVICES['process']}/workers/active")
+            return response.json()
+    except Exception as e:
+        logger.error(f"Error obteniendo workers activos: {e}")
+        return {"active_workers": 0, "workers": []}
+
 @app.delete("/api/v1/correlation/results/{job_id}")
 async def proxy_delete_result(job_id: str):
     """Proxy para eliminar un resultado de correlación"""

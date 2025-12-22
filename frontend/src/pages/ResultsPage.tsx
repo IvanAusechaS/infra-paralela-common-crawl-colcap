@@ -7,12 +7,18 @@
 import { useEffect, useState } from "react";
 import { api, type CorrelationResponse, notify } from "../services/api";
 import jsPDF from "jspdf";
+import ConfirmModal from "../components/ConfirmModal";
 import "./ResultsPage.scss";
 
 const ResultsPage = () => {
   const [results, setResults] = useState<CorrelationResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    jobId: string;
+    index: number;
+  }>({ isOpen: false, jobId: "", index: 0 });
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -103,6 +109,9 @@ const ResultsPage = () => {
 
   const downloadPDF = async (result: CorrelationResponse, index: number) => {
     try {
+      // Obtener información de workers activos
+      const workersData = await api.getActiveWorkers();
+      
       const doc = new jsPDF();
 
       // === PAGE 1: HEADER & OVERVIEW ===
@@ -132,9 +141,9 @@ const ResultsPage = () => {
 
       // Analysis info box
       doc.setFillColor(249, 250, 251); // #f9fafb
-      doc.rect(15, 50, 180, 35, "F");
+      doc.rect(15, 50, 180, 42, "F");
       doc.setDrawColor(229, 231, 235);
-      doc.rect(15, 50, 180, 35, "S");
+      doc.rect(15, 50, 180, 42, "S");
 
       doc.setTextColor(30, 64, 175);
       doc.setFontSize(14);
@@ -146,18 +155,19 @@ const ResultsPage = () => {
       doc.setFont("helvetica", "normal");
       doc.text(`Job ID: ${result.job_id}`, 20, 70);
       doc.text(`Tamaño de muestra: ${result.sample_size} días`, 20, 77);
+      doc.text(`Workers activos: ${workersData.active_workers}`, 20, 84);
 
       // === CORRELATION CHART ===
       doc.setTextColor(30, 64, 175);
       doc.setFontSize(14);
       doc.setFont("helvetica", "bold");
-      doc.text("Gráfico de Correlaciones", 20, 95);
+      doc.text("Gráfico de Correlaciones", 20, 100);
 
       const chartImage = generateCorrelationChart(result.correlations);
-      doc.addImage(chartImage, "PNG", 15, 100, 180, 90);
+      doc.addImage(chartImage, "PNG", 15, 105, 180, 90);
 
       // === CORRELATION VALUES TABLE ===
-      let yPos = 200;
+      let yPos = 205;
       doc.setTextColor(30, 64, 175);
       doc.setFontSize(14);
       doc.setFont("helvetica", "bold");
@@ -286,11 +296,12 @@ const ResultsPage = () => {
   };
 
   const deleteResult = async (jobId: string, index: number) => {
-    if (
-      !window.confirm(`¿Estás seguro de eliminar el Análisis #${index + 1}?`)
-    ) {
-      return;
-    }
+    setConfirmModal({ isOpen: true, jobId, index });
+  };
+
+  const handleConfirmDelete = async () => {
+    const { jobId } = confirmModal;
+    setConfirmModal({ isOpen: false, jobId: "", index: 0 });
 
     try {
       await api.deleteCorrelationResult(jobId);
@@ -300,6 +311,10 @@ const ResultsPage = () => {
       console.error("Error deleting result:", error);
       notify.error("Error al eliminar el análisis");
     }
+  };
+
+  const handleCancelDelete = () => {
+    setConfirmModal({ isOpen: false, jobId: "", index: 0 });
   };
 
   if (loading) {
@@ -395,6 +410,16 @@ const ResultsPage = () => {
           ))}
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title="Confirmar eliminación"
+        message={`¿Estás seguro de eliminar el Análisis #${confirmModal.index + 1}? Esta acción no se puede deshacer.`}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+      />
     </div>
   );
 };

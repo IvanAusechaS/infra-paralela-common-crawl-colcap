@@ -26,6 +26,8 @@ import os
 from datetime import datetime
 from contextlib import asynccontextmanager
 import asyncio
+import uuid
+import socket
 
 # Importar módulos del servicio
 from processor import TextProcessor
@@ -51,12 +53,19 @@ logger = logging.getLogger(__name__)
 text_processor = TextProcessor()
 redis_queue = None
 
+# ID único del worker
+WORKER_ID = f"{socket.gethostname()}-{uuid.uuid4().hex[:8]}"
+WORKER_HEARTBEAT_KEY = "workers:active"
+WORKER_TTL = 30  # Segundos
+
 # Estado del worker
 worker_state = {
+    "worker_id": WORKER_ID,
     "is_running": False,
     "articles_processed": 0,
     "last_processed_at": None,
-    "errors": 0
+    "errors": 0,
+    "started_at": None
 }
 
 @asynccontextmanager
@@ -81,6 +90,7 @@ async def lifespan(app: FastAPI):
         # Iniciar worker en background
         if os.getenv('AUTO_START_WORKER', 'true').lower() == 'true':
             asyncio.create_task(worker_loop())
+            asyncio.create_task(heartbeat_loop())
             logger.info("✅ Worker iniciado automáticamente")
         
     except Exception as e:
@@ -349,7 +359,74 @@ async def get_stats():
         logger.error(f"Error obteniendo estadísticas: {e}")
         raise HTTPException(status_code=500, detail=f"Error obteniendo estadísticas: {str(e)}")
 
+@app.get("/workers/active")
+async def get_active_workers():
+    """
+    Obtener lista de workers activos
+    """
+    try:
+        if not redis_queue or not redis_queue.client:
+            return {"active_workers": 0, "workers": []}
+        
+        import json
+        # Obtener todos los workers activos del hash
+        workers_data = await redis_queue.client.hgetall(WORKER_HEARTBEAT_KEY)
+        
+        active_workers = []
+        for worker_id, data_json in workers_data.items():
+            try:
+                worker_info = json.loads(data_json)
+                active_workers.append(worker_info)
+            except:
+                continue
+        
+        return {
+            "active_workers": len(active_workers),
+            "workers": active_workers,
+            "timestamp": datetime.now().isoformat()
+        }
+    except Exception as e:
+        logger.error(f"Error obteniendo workers activos: {e}")
+        return {"active_workers": 0, "workers": []}
+
 # ==================== WORKER LOOP ====================
+
+async def heartbeat_loop():
+    """
+    Loop para enviar heartbeat a Redis y registrar este worker como activo
+    """
+    logger.info(f"💓 Heartbeat loop iniciado para worker {WORKER_ID}")
+    
+    while worker_state["is_running"] or True:  # Siempre activo mientras el servicio corra
+        try:
+            if redis_queue and redis_queue.client:
+                import json
+                worker_info = {
+                    "worker_id": WORKER_ID,
+                    "hostname": socket.gethostname(),
+                    "articles_processed": worker_state["articles_processed"],
+                    "last_heartbeat": datetime.now().isoformat(),
+                    "started_at": worker_state.get("started_at") or datetime.now().isoformat(),
+                    "is_running": worker_state["is_running"],
+                    "errors": worker_state["errors"]
+                }
+                
+                # Registrar en Redis con TTL
+                await redis_queue.client.hset(
+                    WORKER_HEARTBEAT_KEY,
+                    WORKER_ID,
+                    json.dumps(worker_info)
+                )
+                
+                # Establecer TTL en el campo del worker
+                await redis_queue.client.expire(WORKER_HEARTBEAT_KEY, WORKER_TTL + 10)
+                
+                logger.debug(f"💓 Heartbeat enviado: {WORKER_ID}")
+        except Exception as e:
+            logger.error(f"Error en heartbeat: {e}")
+        
+        # Enviar heartbeat cada 10 segundos
+        await asyncio.sleep(10)
 
 async def worker_loop():
     """
@@ -357,7 +434,8 @@ async def worker_loop():
     y procesa artículos de forma continua
     """
     worker_state["is_running"] = True
-    logger.info("🔄 Worker loop iniciado")
+    worker_state["started_at"] = datetime.now().isoformat()
+    logger.info(f"🔄 Worker loop iniciado: {WORKER_ID}")
     
     consecutive_errors = 0
     max_consecutive_errors = 5

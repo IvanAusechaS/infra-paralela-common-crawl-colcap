@@ -26,6 +26,8 @@ const HomePage = () => {
           // Get real stats from backend
           try {
             const correlationResults = await api.getCorrelationResults(100);
+            const workersData = await api.getActiveWorkers();
+            
             const statsData = {
               totalArticles: correlationResults.reduce(
                 (sum, r) => sum + r.sample_size,
@@ -43,7 +45,7 @@ const HomePage = () => {
                       return sum + avgCorr;
                     }, 0) / correlationResults.length
                   : 0,
-              activeWorkers: 4, // Static for now
+              activeWorkers: workersData.active_workers,
             };
             setStats(statsData);
           } catch (err) {
