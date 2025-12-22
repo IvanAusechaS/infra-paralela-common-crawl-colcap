@@ -1,183 +1,285 @@
 /**
- * HomePage Styles
+ * HomePage Styles - News2Market
+ * Responsive landing page with feature cards and statistics
  */
 
-@import '../styles/global.scss';
+@use '../styles/global.scss' as *;
 
 .home-page {
-  animation: fadeIn 0.5s ease-in;
+  animation: fadeIn 0.6s ease-out;
 }
 
 .hero {
   text-align: center;
-  padding: 64px 24px;
-  background: linear-gradient(135deg, rgba($primary-color, 0.05), rgba($secondary-color, 0.05));
-  border-radius: 16px;
-  margin-bottom: 48px;
+  padding: $spacing-3xl $spacing-xl;
+  background: linear-gradient(135deg, rgba(30, 64, 175, 0.05), rgba(5, 150, 105, 0.05));
+  border-radius: $radius-xl;
+  margin-bottom: $spacing-3xl;
+  animation: slideUp 0.5s ease-out;
+
+  @include responsive('md') {
+    padding: calc($spacing-3xl + $spacing-xl) $spacing-2xl;
+  }
 
   h1 {
-    font-size: 48px;
-    margin-bottom: 16px;
+    font-family: $font-heading;
+    font-size: $font-size-3xl;
+    margin-bottom: $spacing-lg;
+    background: linear-gradient(135deg, $primary-color, $secondary-color);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+    @include responsive('md') {
+      font-size: $font-size-4xl;
+    }
+
+    @include responsive('lg') {
+      font-size: $font-size-5xl;
+    }
   }
 
   .subtitle {
-    font-size: 20px;
+    font-size: $font-size-lg;
     color: $text-secondary;
     max-width: 800px;
-    margin: 0 auto 24px;
+    margin: 0 auto $spacing-xl;
+    line-height: $line-height-relaxed;
+
+    @include responsive('md') {
+      font-size: $font-size-xl;
+    }
   }
 
   .status-indicator {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
+    gap: $spacing-sm;
+    padding: $spacing-sm $spacing-lg;
     background: $bg-primary;
-    border-radius: 24px;
-    box-shadow: $shadow-sm;
+    border-radius: $radius-full;
+    box-shadow: $shadow-md;
+    transition: $transition-all;
+
+    &:hover {
+      box-shadow: $shadow-lg;
+      transform: translateY(-2px);
+    }
 
     .status-dot {
       width: 12px;
       height: 12px;
-      border-radius: 50%;
-      animation: pulse 2s infinite;
+      border-radius: $radius-full;
 
       &.online {
         background: $secondary-color;
+        box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.2);
+        animation: pulse 2s infinite;
       }
 
       &.offline {
         background: $danger-color;
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
       }
     }
 
     .status-text {
-      font-size: 14px;
-      font-weight: 500;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
       color: $text-secondary;
     }
   }
 }
 
 .features {
-  margin-bottom: 48px;
+  margin-bottom: $spacing-3xl;
 
   h2 {
     text-align: center;
-    margin-bottom: 32px;
+    font-family: $font-heading;
+    margin-bottom: $spacing-2xl;
   }
 }
 
 .feature-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
+  grid-template-columns: 1fr;
+  gap: $spacing-xl;
+
+  @include responsive('md') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include responsive('lg') {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 .feature-card {
   @include card;
   text-align: center;
+  border: 1px solid $border-light;
+  transition: $transition-all;
+
+  &:hover {
+    border-color: $primary-color;
+    transform: translateY(-4px);
+    
+    .feature-icon svg {
+      transform: scale(1.1);
+      color: $primary-color;
+    }
+  }
 
   .feature-icon {
-    font-size: 48px;
-    display: block;
-    margin-bottom: 16px;
+    width: 56px;
+    height: 56px;
+    margin: 0 auto $spacing-lg;
+    color: $primary-color;
+    transition: $transition-base;
+
+    svg {
+      width: 100%;
+      height: 100%;
+      transition: $transition-all;
+    }
   }
 
   h3 {
+    font-family: $font-heading;
     color: $text-primary;
-    margin-bottom: 12px;
+    margin-bottom: $spacing-md;
+    font-size: $font-size-lg;
   }
 
   p {
     color: $text-secondary;
-    font-size: 14px;
-    line-height: 1.6;
+    font-size: $font-size-sm;
+    line-height: $line-height-relaxed;
+    margin-bottom: 0;
   }
 }
 
 .stats-section {
-  margin-bottom: 48px;
+  margin-bottom: $spacing-3xl;
+  animation: slideUp 0.6s ease-out 0.2s backwards;
 
   h2 {
     text-align: center;
-    margin-bottom: 32px;
+    font-family: $font-heading;
+    margin-bottom: $spacing-2xl;
   }
 }
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 24px;
+  grid-template-columns: 1fr;
+  gap: $spacing-xl;
+
+  @include responsive('sm') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include responsive('lg') {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 .stat-card {
   @include card;
   text-align: center;
+  border: 2px solid $border-light;
+  transition: $transition-all;
+
+  &:hover {
+    border-color: $secondary-color;
+    transform: translateY(-4px) scale(1.02);
+    
+    .stat-icon svg {
+      color: $secondary-color;
+      transform: scale(1.1) rotate(5deg);
+    }
+  }
+
+  .stat-icon {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto $spacing-md;
+    color: $primary-color;
+    
+    svg {
+      width: 100%;
+      height: 100%;
+      transition: $transition-all;
+    }
+  }
 
   .stat-value {
-    font-size: 36px;
-    font-weight: 700;
+    font-family: $font-heading;
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-bold;
     color: $primary-color;
-    margin-bottom: 8px;
+    margin-bottom: $spacing-sm;
+
+    @include responsive('md') {
+      font-size: $font-size-4xl;
+    }
   }
 
   .stat-label {
-    font-size: 14px;
+    font-size: $font-size-xs;
     color: $text-secondary;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    font-weight: $font-weight-semibold;
   }
 }
 
 .cta-section {
   text-align: center;
-  padding: 48px 24px;
-  background: $bg-primary;
-  border-radius: 16px;
-  box-shadow: $shadow-md;
+  padding: $spacing-3xl $spacing-xl;
+  background: linear-gradient(135deg, rgba(30, 64, 175, 0.08), rgba(5, 150, 105, 0.08));
+  border-radius: $radius-xl;
+  box-shadow: $shadow-lg;
+  animation: scaleIn 0.5s ease-out 0.3s backwards;
 
   h2 {
-    margin-bottom: 16px;
+    font-family: $font-heading;
+    margin-bottom: $spacing-md;
   }
 
   p {
-    font-size: 18px;
-    margin-bottom: 24px;
+    font-size: $font-size-lg;
+    margin-bottom: $spacing-xl;
+    color: $text-secondary;
+  }
+
+  .button {
+    font-size: $font-size-lg;
+    padding: $spacing-lg $spacing-2xl;
   }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+// Mobile optimizations
+@media (max-width: $breakpoint-md) {
+  .hero {
+    padding: $spacing-2xl $spacing-md;
 
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
+    h1 {
+      font-size: $font-size-2xl;
+    }
 
-@media (max-width: 768px) {
-  .hero h1 {
-    font-size: 32px;
+    .subtitle {
+      font-size: $font-size-base;
+    }
   }
 
-  .hero .subtitle {
-    font-size: 16px;
+  .feature-card,
+  .stat-card {
+    padding: $spacing-lg;
   }
 
-  .feature-grid,
-  .stats-grid {
-    grid-template-columns: 1fr;
+  .cta-section {
+    padding: $spacing-2xl $spacing-md;
   }
 }

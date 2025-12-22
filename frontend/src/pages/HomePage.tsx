@@ -1,12 +1,12 @@
 /**
  * HomePage - News2Market
- * 
- * Página de inicio con overview del proyecto
+ * Landing page with project overview and system status
  */
 
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../services/api';
+import { notify } from '../utils/notifications';
 import './HomePage.scss';
 
 const HomePage = () => {
@@ -17,17 +17,19 @@ const HomePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Health check
         const healthy = await api.healthCheck();
         setIsHealthy(healthy);
 
-        // Obtener estadísticas
         if (healthy) {
           const statsData = await api.getProcessingStats();
           setStats(statsData);
+          notify.success('Sistema conectado correctamente');
+        } else {
+          notify.warning('Sistema no disponible');
         }
       } catch (error) {
         console.error('Error fetching data:', error);
+        notify.error('Error al conectar con el sistema');
       } finally {
         setLoading(false);
       }
@@ -47,7 +49,7 @@ const HomePage = () => {
   return (
     <div className="home-page">
       <header className="hero">
-        <h1>📰 News2Market</h1>
+        <h1>News2Market</h1>
         <p className="subtitle">
           Sistema distribuido para análisis de correlación entre noticias económicas
           y el índice COLCAP
@@ -65,7 +67,12 @@ const HomePage = () => {
         <h2>Características principales</h2>
         <div className="feature-grid">
           <div className="feature-card">
-            <span className="feature-icon">🔍</span>
+            <div className="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.35-4.35"/>
+              </svg>
+            </div>
             <h3>Adquisición de datos</h3>
             <p>
               Extracción automática de noticias económicas desde Common Crawl
@@ -74,7 +81,11 @@ const HomePage = () => {
           </div>
 
           <div className="feature-card">
-            <span className="feature-icon">🧹</span>
+            <div className="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
+            </div>
             <h3>Procesamiento de texto</h3>
             <p>
               Limpieza, extracción de keywords económicas, análisis de sentimiento
@@ -83,7 +94,13 @@ const HomePage = () => {
           </div>
 
           <div className="feature-card">
-            <span className="feature-icon">📊</span>
+            <div className="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="12" y1="20" x2="12" y2="10"/>
+                <line x1="18" y1="20" x2="18" y2="4"/>
+                <line x1="6" y1="20" x2="6" y2="16"/>
+              </svg>
+            </div>
             <h3>Análisis de correlación</h3>
             <p>
               Cálculo de correlación de Pearson entre métricas noticiosas y
@@ -92,7 +109,13 @@ const HomePage = () => {
           </div>
 
           <div className="feature-card">
-            <span className="feature-icon">☁️</span>
+            <div className="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                <line x1="12" y1="22.08" x2="12" y2="12"/>
+              </svg>
+            </div>
             <h3>Infraestructura escalable</h3>
             <p>
               Despliegue en AWS EKS con Kubernetes, autoescalado horizontal
@@ -107,20 +130,46 @@ const HomePage = () => {
           <h2>Estadísticas del sistema</h2>
           <div className="stats-grid">
             <div className="stat-card">
+              <div className="stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                  <polyline points="10 9 9 9 8 9"/>
+                </svg>
+              </div>
               <div className="stat-value">{stats.total_articles || 0}</div>
               <div className="stat-label">Artículos procesados</div>
             </div>
             <div className="stat-card">
+              <div className="stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="11" cy="11" r="8"/>
+                  <path d="m21 21-4.35-4.35"/>
+                </svg>
+              </div>
               <div className="stat-value">{stats.total_keywords || 0}</div>
               <div className="stat-label">Keywords económicas</div>
             </div>
             <div className="stat-card">
+              <div className="stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                </svg>
+              </div>
               <div className="stat-value">
                 {stats.avg_sentiment ? stats.avg_sentiment.toFixed(2) : '0.00'}
               </div>
               <div className="stat-label">Sentimiento promedio</div>
             </div>
             <div className="stat-card">
+              <div className="stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="9 11 12 14 22 4"/>
+                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                </svg>
+              </div>
               <div className="stat-value">{stats.active_workers || 0}</div>
               <div className="stat-label">Workers activos</div>
             </div>
