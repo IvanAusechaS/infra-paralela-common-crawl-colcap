@@ -87,14 +87,16 @@ const ResultsPage = () => {
                 ))}
               </div>
 
-              <div className="insights-preview">
-                <h4>Insights principales</h4>
-                <ul>
-                  {result.insights.slice(0, 2).map((insight, idx) => (
-                    <li key={idx}>{insight}</li>
-                  ))}
-                </ul>
-              </div>
+              {result.insights && result.insights.length > 0 && (
+                <div className="insights-preview">
+                  <h4>Insights principales</h4>
+                  <ul>
+                    {result.insights.slice(0, 2).map((insight, idx) => (
+                      <li key={idx}>{insight}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           ))}
         </div>

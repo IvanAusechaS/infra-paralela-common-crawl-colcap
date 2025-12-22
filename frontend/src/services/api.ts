@@ -126,7 +126,7 @@ export const api = {
     const response = await apiClient.get('/correlation/results', {
       params: { limit },
     });
-    return response.data;
+    return response.data.results || [];
   },
 
   /**

@@ -17,12 +17,14 @@
   animation: slideDown 0.3s ease-out;
   width: 100%;
   max-width: 100vw;
+  height: 70px;
 }
 
 .navbar-container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: $spacing-lg $spacing-xl;
+  padding: $spacing-md $spacing-xl;
+  height: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;

@@ -170,16 +170,18 @@ const AnalysisPage = () => {
               />
             </div>
 
-            <div className="card">
-              <h3>Insights del análisis</h3>
-              <ul className="insights-list">
-                {result.insights.map((insight, index) => (
-                  <li key={index} className="insight-item">
-                    {insight}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {result.insights && result.insights.length > 0 && (
+              <div className="card">
+                <h3>Insights del análisis</h3>
+                <ul className="insights-list">
+                  {result.insights.map((insight, index) => (
+                    <li key={index} className="insight-item">
+                      {insight}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         )}
       </div>
