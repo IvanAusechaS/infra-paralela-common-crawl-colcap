@@ -20,6 +20,7 @@ from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
 from datetime import datetime, timedelta
 from contextlib import asynccontextmanager
+from sqlalchemy import select
 import logging
 import os
 
@@ -27,12 +28,13 @@ import os
 from colcap_client import ColcapClient
 from correlation_engine import CorrelationEngine
 from database import (
-    SessionLocal,
+    AsyncSessionLocal,
     CorrelationResult,
     save_correlation_result,
-    get_correlation_results,
-    init_db,
-    check_db_health
+    get_correlation_result,
+    list_correlation_results,
+    init_database,
+    get_db_session
 )
 
 # Configurar logging
@@ -52,7 +54,7 @@ async def lifespan(app: FastAPI):
     logger.info("🚀 Iniciando Correlation Service...")
     
     try:
-        init_db()
+        await init_database()
         logger.info("✅ Base de datos inicializada")
     except Exception as e:
         logger.error(f"❌ Error en startup: {e}")
@@ -126,7 +128,13 @@ async def root():
 @app.get("/health")
 async def health_check():
     """Health check"""
-    db_healthy = check_db_health()
+    try:
+        async with AsyncSessionLocal() as session:
+            await session.execute(select(1))
+        db_healthy = True
+    except Exception as e:
+        logger.error(f"Database health check failed: {e}")
+        db_healthy = False
     
     return {
         "status": "healthy" if db_healthy else "degraded",
@@ -255,7 +263,8 @@ async def get_colcap_data(start_date: str, end_date: str):
 async def list_results(limit: int = 10, offset: int = 0):
     """Listar resultados de correlación"""
     try:
-        results = get_correlation_results(limit=limit, offset=offset)
+        all_results = await list_correlation_results(limit=limit + offset)
+        results = all_results[offset:]
         
         return {
             "total": len(results),
