@@ -3,7 +3,7 @@
  * Responsive landing page with feature cards and statistics
  */
 
-@use '../styles/global.scss' as *;
+@use "../styles/global.scss" as *;
 
 .home-page {
   animation: fadeIn 0.6s ease-out;
@@ -12,14 +12,18 @@
 .hero {
   text-align: center;
   padding: $spacing-3xl $spacing-xl;
-  background: linear-gradient(135deg, rgba(30, 64, 175, 0.05), rgba(5, 150, 105, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(30, 64, 175, 0.05),
+    rgba(5, 150, 105, 0.05)
+  );
   border-radius: $radius-xl;
   margin-bottom: $spacing-3xl;
   position: relative;
   z-index: 1;
   animation: slideUp 0.5s ease-out;
 
-  @include responsive('md') {
+  @include responsive("md") {
     padding: calc($spacing-3xl + $spacing-xl) $spacing-2xl;
   }
 
@@ -32,11 +36,11 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
 
-    @include responsive('md') {
+    @include responsive("md") {
       font-size: $font-size-4xl;
     }
 
-    @include responsive('lg') {
+    @include responsive("lg") {
       font-size: $font-size-5xl;
     }
   }
@@ -48,7 +52,7 @@
     margin: 0 auto $spacing-xl;
     line-height: $line-height-relaxed;
 
-    @include responsive('md') {
+    @include responsive("md") {
       font-size: $font-size-xl;
     }
   }
@@ -108,11 +112,11 @@
   grid-template-columns: 1fr;
   gap: $spacing-xl;
 
-  @include responsive('md') {
+  @include responsive("md") {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @include responsive('lg') {
+  @include responsive("lg") {
     grid-template-columns: repeat(4, 1fr);
   }
 }
@@ -126,7 +130,7 @@
   &:hover {
     border-color: $primary-color;
     transform: translateY(-4px);
-    
+
     .feature-icon svg {
       transform: scale(1.1);
       color: $primary-color;
@@ -178,11 +182,11 @@
   grid-template-columns: 1fr;
   gap: $spacing-xl;
 
-  @include responsive('sm') {
+  @include responsive("sm") {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @include responsive('lg') {
+  @include responsive("lg") {
     grid-template-columns: repeat(4, 1fr);
   }
 }
@@ -196,7 +200,7 @@
   &:hover {
     border-color: $secondary-color;
     transform: translateY(-4px) scale(1.02);
-    
+
     .stat-icon svg {
       color: $secondary-color;
       transform: scale(1.1) rotate(5deg);
@@ -208,7 +212,7 @@
     height: 40px;
     margin: 0 auto $spacing-md;
     color: $primary-color;
-    
+
     svg {
       width: 100%;
       height: 100%;
@@ -223,7 +227,7 @@
     color: $primary-color;
     margin-bottom: $spacing-sm;
 
-    @include responsive('md') {
+    @include responsive("md") {
       font-size: $font-size-4xl;
     }
   }
@@ -262,7 +266,7 @@
     font-size: $font-size-lg;
     padding: $spacing-lg $spacing-2xl;
     background-color: $primary-light;
-    
+
     &:hover {
       background-color: $primary-color;
     }

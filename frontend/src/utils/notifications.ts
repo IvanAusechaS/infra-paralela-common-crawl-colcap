@@ -3,10 +3,10 @@
  * Centralized notification system using react-toastify
  */
 
-import { toast, type ToastOptions } from 'react-toastify';
+import { toast, type ToastOptions } from "react-toastify";
 
 const defaultOptions: ToastOptions = {
-  position: 'top-right',
+  position: "top-right",
   autoClose: 5000,
   hideProgressBar: false,
   closeOnClick: true,
@@ -31,7 +31,7 @@ export const notify = {
     toast.info(message, { ...defaultOptions, ...options });
   },
 
-  promise: <T,>(
+  promise: <T>(
     promise: Promise<T>,
     messages: {
       pending: string;
@@ -40,10 +40,6 @@ export const notify = {
     },
     options?: ToastOptions
   ) => {
-    return toast.promise(
-      promise,
-      messages,
-      { ...defaultOptions, ...options }
-    );
+    return toast.promise(promise, messages, { ...defaultOptions, ...options });
   },
 };

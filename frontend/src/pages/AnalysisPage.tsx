@@ -1,34 +1,46 @@
 /**
  * AnalysisPage - News2Market
- * 
+ *
  * Página para configurar y ejecutar análisis de correlación
  */
 
-import { useState } from 'react';
-import { api, type CorrelationRequest, type CorrelationResponse } from '../services/api';
-import CorrelationChart from '../components/CorrelationChart';
-import { notify } from '../services/api';
-import './AnalysisPage.scss';
+import { useState, useEffect } from "react";
+import {
+  api,
+  notify,
+  type CorrelationRequest,
+  type CorrelationResponse,
+} from "../services/api";
+import CorrelationChart from "../components/CorrelationChart";
+import "./AnalysisPage.scss";
 
 const AnalysisPage = () => {
-  const [startDate, setStartDate] = useState<string>('');
-  const [endDate, setEndDate] = useState<string>('');
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
   const [lagDays, setLagDays] = useState<number>(0);
-  const [selectedMetrics, setSelectedMetrics] = useState<string[]>(['volume', 'keywords', 'sentiment']);
+  const [selectedMetrics, setSelectedMetrics] = useState<string[]>([
+    "volume",
+    "keywords",
+    "sentiment",
+  ]);
   const [loading, setLoading] = useState<boolean>(false);
   const [result, setResult] = useState<CorrelationResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const availableMetrics = [
-    { value: 'volume', label: 'Volumen de noticias' },
-    { value: 'keywords', label: 'Keywords económicas' },
-    { value: 'sentiment', label: 'Sentimiento promedio' },
+    { value: "volume", label: "Volumen de noticias" },
+    { value: "keywords", label: "Keywords económicas" },
+    { value: "sentiment", label: "Sentimiento promedio" },
   ];
 
   const handleMetricToggle = (metric: string) => {
-    setSelectedMetrics(prev =>
+    setSelectedMetrics((prev) =>
       prev.includes(metric)
-        ? prev.filter(m => m !== metric)
+        ? prev.filter((m) => m !== metric)
         : [...prev, metric]
     );
   };
@@ -40,17 +52,20 @@ const AnalysisPage = () => {
 
     // Validaciones
     if (!startDate || !endDate) {
-      setError('Por favor selecciona ambas fechas');
+      notify.error("Por favor selecciona ambas fechas");
+      setError("Por favor selecciona ambas fechas");
       return;
     }
 
     if (new Date(startDate) > new Date(endDate)) {
-      setError('La fecha de inicio debe ser anterior a la fecha de fin');
+      notify.error("La fecha de inicio debe ser anterior a la fecha de fin");
+      setError("La fecha de inicio debe ser anterior a la fecha de fin");
       return;
     }
 
     if (selectedMetrics.length === 0) {
-      setError('Selecciona al menos una métrica');
+      notify.error("Selecciona al menos una métrica");
+      setError("Selecciona al menos una métrica");
       return;
     }
 
@@ -66,9 +81,12 @@ const AnalysisPage = () => {
 
       const response = await api.calculateCorrelation(request);
       setResult(response);
-      notify.success('Análisis completado exitosamente');
+      notify.success("Análisis completado exitosamente");
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Error al calcular correlación');
+      const errorMsg =
+        err.response?.data?.detail || "Error al calcular correlación";
+      setError(errorMsg);
+      notify.error(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -78,13 +96,16 @@ const AnalysisPage = () => {
     <div className="analysis-page">
       <header className="page-header">
         <h1>Análisis de Correlación</h1>
-        <p>Configura los parámetros para analizar la correlación entre noticias y COLCAP</p>
+        <p>
+          Configura los parámetros para analizar la correlación entre noticias y
+          COLCAP
+        </p>
       </header>
 
       <div className="analysis-container">
         <div className="form-section card">
           <h2>Configuración del análisis</h2>
-          
+
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label htmlFor="start-date">Fecha de inicio</label>
@@ -129,7 +150,7 @@ const AnalysisPage = () => {
             <div className="form-group">
               <label>Métricas a analizar</label>
               <div className="checkbox-group">
-                {availableMetrics.map(metric => (
+                {availableMetrics.map((metric) => (
                   <label key={metric.value} className="checkbox-label">
                     <input
                       type="checkbox"
@@ -144,12 +165,8 @@ const AnalysisPage = () => {
 
             {error && <div className="error">{error}</div>}
 
-            <button
-              type="submit"
-              className="button primary"
-              disabled={loading}
-            >
-              {loading ? 'Analizando...' : 'Calcular correlación'}
+            <button type="submit" className="button primary" disabled={loading}>
+              {loading ? "Analizando..." : "Calcular correlación"}
             </button>
           </form>
         </div>
@@ -159,8 +176,12 @@ const AnalysisPage = () => {
             <div className="card">
               <h2>Resultados del análisis</h2>
               <div className="result-info">
-                <p><strong>Job ID:</strong> {result.job_id}</p>
-                <p><strong>Tamaño de muestra:</strong> {result.sample_size} días</p>
+                <p>
+                  <strong>Job ID:</strong> {result.job_id}
+                </p>
+                <p>
+                  <strong>Tamaño de muestra:</strong> {result.sample_size} días
+                </p>
               </div>
             </div>
 

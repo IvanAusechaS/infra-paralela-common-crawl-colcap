@@ -3,7 +3,7 @@
  * Responsive navigation with custom logo and smooth animations
  */
 
-@use '../styles/global.scss' as *;
+@use "../styles/global.scss" as *;
 
 .navbar {
   background: $bg-primary;
@@ -29,7 +29,7 @@
   justify-content: space-between;
   align-items: center;
 
-  @include responsive('md') {
+  @include responsive("md") {
     padding: $spacing-lg $spacing-2xl;
   }
 }
@@ -55,15 +55,15 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    
-    @include responsive('md') {
+
+    @include responsive("md") {
       font-size: $font-size-2xl;
     }
   }
 
   &:hover {
     transform: translateY(-2px);
-    
+
     .logo-icon {
       transform: scale(1.1) rotate(5deg);
     }
@@ -77,7 +77,7 @@
   margin: 0;
   padding: 0;
 
-  @include responsive('md') {
+  @include responsive("md") {
     gap: $spacing-md;
   }
 }
@@ -93,13 +93,13 @@
   transition: $transition-all;
   position: relative;
 
-  @include responsive('md') {
+  @include responsive("md") {
     font-size: $font-size-base;
     padding: $spacing-sm $spacing-lg;
   }
 
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: 0;
     left: 50%;
@@ -113,7 +113,7 @@
   &:hover {
     color: $primary-color;
     background: rgba(30, 64, 175, 0.05);
-    
+
     &::after {
       width: 80%;
     }
@@ -123,7 +123,7 @@
     color: $primary-color;
     background: rgba(30, 64, 175, 0.1);
     font-weight: $font-weight-semibold;
-    
+
     &::after {
       width: 80%;
     }

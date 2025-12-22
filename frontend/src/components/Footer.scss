@@ -2,7 +2,7 @@
  * Footer Styles - News2Market
  */
 
-@use '../styles/global.scss' as *;
+@use "../styles/global.scss" as *;
 
 .footer {
   background: $bg-dark;
@@ -26,7 +26,7 @@
   gap: $spacing-2xl;
   margin-bottom: $spacing-2xl;
 
-  @include responsive('md') {
+  @include responsive("md") {
     grid-template-columns: 2fr 1fr 1fr 1fr;
   }
 }

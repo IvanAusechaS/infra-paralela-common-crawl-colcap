@@ -2,7 +2,7 @@
  * ResultsPage Styles
  */
 
-@use '../styles/global.scss' as *;
+@use "../styles/global.scss" as *;
 
 .results-page {
   animation: fadeIn 0.5s ease-in;
@@ -73,7 +73,7 @@
     }
 
     .job-id {
-      font-family: 'Courier New', monospace;
+      font-family: "Courier New", monospace;
       font-size: 12px;
       padding: 4px 8px;
       background: rgba($primary-color, 0.1);
@@ -151,7 +151,7 @@
     }
 
     .correlation-value {
-      font-family: 'Courier New', monospace;
+      font-family: "Courier New", monospace;
       font-size: 14px;
       font-weight: 600;
       color: $text-primary;

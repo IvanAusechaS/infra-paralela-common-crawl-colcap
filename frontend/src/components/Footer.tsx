@@ -2,8 +2,8 @@
  * Footer Component - News2Market
  */
 
-import { Link } from 'react-router-dom';
-import './Footer.scss';
+import { Link } from "react-router-dom";
+import "./Footer.scss";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -14,24 +14,57 @@ const Footer = () => {
         <div className="footer-content">
           <div className="footer-section">
             <h3>News2Market</h3>
-            <p>Sistema distribuido para análisis de correlación entre noticias económicas y el índice COLCAP</p>
+            <p>
+              Sistema distribuido para análisis de correlación entre noticias
+              económicas y el índice COLCAP
+            </p>
           </div>
 
           <div className="footer-section">
             <h4>Navegación</h4>
             <ul>
-              <li><Link to="/">Inicio</Link></li>
-              <li><Link to="/analysis">Análisis</Link></li>
-              <li><Link to="/results">Resultados</Link></li>
+              <li>
+                <Link to="/">Inicio</Link>
+              </li>
+              <li>
+                <Link to="/analysis">Análisis</Link>
+              </li>
+              <li>
+                <Link to="/results">Resultados</Link>
+              </li>
             </ul>
           </div>
 
           <div className="footer-section">
             <h4>Recursos</h4>
             <ul>
-              <li><a href="/docs/ARCHITECTURE.md" target="_blank" rel="noopener noreferrer">Arquitectura</a></li>
-              <li><a href="/docs/FRONTEND_DESIGN.md" target="_blank" rel="noopener noreferrer">Diseño</a></li>
-              <li><a href="/docs/INSTALLATION.md" target="_blank" rel="noopener noreferrer">Instalación</a></li>
+              <li>
+                <a
+                  href="/docs/ARCHITECTURE.md"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Arquitectura
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/docs/FRONTEND_DESIGN.md"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Diseño
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/docs/INSTALLATION.md"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Instalación
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -47,7 +80,10 @@ const Footer = () => {
         </div>
 
         <div className="footer-bottom">
-          <p>&copy; {currentYear} News2Market. Infraestructuras Paralelas y Distribuidas.</p>
+          <p>
+            &copy; {currentYear} News2Market. Infraestructuras Paralelas y
+            Distribuidas.
+          </p>
         </div>
       </div>
     </footer>

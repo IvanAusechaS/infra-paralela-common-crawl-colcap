@@ -2,7 +2,7 @@
  * AnalysisPage Styles
  */
 
-@use '../styles/global.scss' as *;
+@use "../styles/global.scss" as *;
 
 .analysis-page {
   animation: fadeIn 0.5s ease-in;
@@ -64,17 +64,17 @@
     transition: $transition-all;
     width: 100%;
     background: $bg-primary;
-    
+
     &:focus {
       outline: none;
       border-color: $primary-color;
       box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
     }
-    
+
     &[type="date"] {
       cursor: pointer;
       font-family: $font-body;
-      
+
       &::-webkit-calendar-picker-indicator {
         cursor: pointer;
         filter: invert(0.5);

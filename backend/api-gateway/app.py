@@ -206,6 +206,24 @@ async def proxy_stats():
         logger.error(f"Error obteniendo stats: {e}")
         return {}
 
+@app.delete("/api/v1/correlation/results/{job_id}")
+async def proxy_delete_result(job_id: str):
+    """Proxy para eliminar un resultado de correlación"""
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            response = await client.delete(
+                f"{SERVICES['correlate']}/results/{job_id}"
+            )
+            if response.status_code == 404:
+                raise HTTPException(status_code=404, detail="Resultado no encontrado")
+            return response.json()
+    except httpx.HTTPStatusError as e:
+        logger.error(f"Error eliminando resultado: {e}")
+        raise HTTPException(status_code=e.response.status_code, detail=str(e))
+    except Exception as e:
+        logger.error(f"Error eliminando resultado: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)

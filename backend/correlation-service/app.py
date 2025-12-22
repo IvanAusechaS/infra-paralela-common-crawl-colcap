@@ -292,11 +292,7 @@ async def list_results(limit: int = 10, offset: int = 0):
 async def get_result(job_id: str):
     """Obtener resultado específico"""
     try:
-        db = SessionLocal()
-        result = db.query(CorrelationResult).filter(
-            CorrelationResult.job_id == job_id
-        ).first()
-        db.close()
+        result = await get_correlation_result(job_id)
         
         if not result:
             raise HTTPException(status_code=404, detail="Resultado no encontrado")
@@ -307,6 +303,31 @@ async def get_result(job_id: str):
         raise
     except Exception as e:
         logger.error(f"❌ Error obteniendo resultado: {e}")
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+
+@app.delete("/results/{job_id}")
+async def delete_result(job_id: str):
+    """Eliminar resultado específico"""
+    try:
+        async with AsyncSessionLocal() as session:
+            result = await session.execute(
+                select(CorrelationResult).where(CorrelationResult.job_id == job_id)
+            )
+            correlation_result = result.scalar_one_or_none()
+            
+            if not correlation_result:
+                raise HTTPException(status_code=404, detail="Resultado no encontrado")
+            
+            await session.delete(correlation_result)
+            await session.commit()
+            
+            logger.info(f"✅ Resultado eliminado: {job_id}")
+            return {"message": "Resultado eliminado exitosamente", "job_id": job_id}
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"❌ Error eliminando resultado: {e}")
         raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
 
 # ==================== MAIN ====================

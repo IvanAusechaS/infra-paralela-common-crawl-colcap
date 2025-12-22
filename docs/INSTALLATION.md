@@ -22,6 +22,7 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente:
 ### Software Requerido
 
 1. **Docker Desktop** (recomendado)
+
    - Versión: 20.10+
    - Descarga: [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
    - Incluye Docker Compose automáticamente
@@ -33,15 +34,18 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente:
 ### Software Opcional (solo para desarrollo sin Docker)
 
 3. **Node.js**
+
    - Versión: 20.x LTS
    - Descarga: [https://nodejs.org/](https://nodejs.org/)
    - Incluye npm automáticamente
 
 4. **Python**
+
    - Versión: 3.11+
    - Descarga: [https://www.python.org/downloads/](https://www.python.org/downloads/)
 
 5. **PostgreSQL**
+
    - Versión: 15+
    - Descarga: [https://www.postgresql.org/download/](https://www.postgresql.org/download/)
 
@@ -172,6 +176,7 @@ docker-compose up
 ```
 
 **Qué hace esto**:
+
 - Descarga las imágenes de Docker necesarias (primera vez)
 - Crea la red `news2market-network`
 - Inicia PostgreSQL y Redis
@@ -186,6 +191,7 @@ docker-compose ps
 ```
 
 **Salida esperada**:
+
 ```
 NAME                          STATUS              PORTS
 api-gateway                   Up                  0.0.0.0:8000->8000/tcp
@@ -300,6 +306,7 @@ psql -h localhost -U news2market -d news2market -f backend/init-db.sql
 Abre **4 terminales separadas** y ejecuta cada servicio:
 
 **Terminal 1: API Gateway**
+
 ```bash
 cd backend/api-gateway
 python app.py
@@ -307,6 +314,7 @@ python app.py
 ```
 
 **Terminal 2: Data Acquisition**
+
 ```bash
 cd backend/data-acquisition
 python app.py
@@ -314,6 +322,7 @@ python app.py
 ```
 
 **Terminal 3: Text Processor**
+
 ```bash
 cd backend/text-processor
 python app.py
@@ -321,6 +330,7 @@ python app.py
 ```
 
 **Terminal 4: Correlation Service**
+
 ```bash
 cd backend/correlation-service
 python app.py
@@ -368,6 +378,7 @@ curl http://localhost:8003/health
 ```
 
 **Respuesta esperada** (ejemplo para API Gateway):
+
 ```json
 {
   "status": "healthy",
@@ -436,6 +447,7 @@ python scripts/verify_system.py
 ```
 
 Este script verifica:
+
 - Conectividad de todos los servicios
 - Estado de la base de datos
 - Estado de Redis
@@ -450,6 +462,7 @@ Este script verifica:
 **Error**: `Error: bind: address already in use`
 
 **Solución**:
+
 ```bash
 # Ver qué proceso usa el puerto
 # Windows PowerShell:
@@ -466,6 +479,7 @@ lsof -i :8000
 **Error**: `permission denied while trying to connect to the Docker daemon`
 
 **Solución**:
+
 ```bash
 # Agregar tu usuario al grupo docker
 sudo usermod -aG docker $USER
@@ -479,6 +493,7 @@ newgrp docker
 **Error**: `could not connect to server: Connection refused`
 
 **Solución**:
+
 ```bash
 # Verificar que PostgreSQL está corriendo
 docker-compose ps postgres
@@ -497,6 +512,7 @@ docker-compose restart postgres
 **Error**: `Failed to fetch` o `Network Error`
 
 **Solución**:
+
 ```bash
 # Verificar que el API Gateway está corriendo
 curl http://localhost:8000/api/v1/health
@@ -513,6 +529,7 @@ docker-compose logs frontend
 **Error**: `500 Internal Server Error` al calcular correlación
 
 **Solución**:
+
 ```bash
 # Ver logs del correlation-service
 docker-compose logs correlation-service
@@ -528,6 +545,7 @@ docker exec -it postgres psql -U news2market -d news2market -c "SELECT COUNT(*) 
 **Síntoma**: `docker-compose ps` muestra "Restarting"
 
 **Solución**:
+
 ```bash
 # Ver logs detallados del servicio problemático
 docker-compose logs [service-name]

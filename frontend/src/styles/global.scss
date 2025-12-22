@@ -419,6 +419,22 @@ a {
     }
   }
 
+  &.danger {
+    background: $danger-color;
+    color: $text-inverse;
+
+    &:hover:not(:disabled) {
+      background: #b91c1c;
+      transform: translateY(-1px);
+      box-shadow: $shadow-md;
+    }
+
+    &:active:not(:disabled) {
+      background: #991b1b;
+      transform: translateY(0);
+    }
+  }
+
   &.outline {
     background: transparent;
     color: $primary-color;

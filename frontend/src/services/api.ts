@@ -1,20 +1,22 @@
 /**
  * API Client - News2Market Frontend
- * 
+ *
  * Cliente HTTP para comunicación con API Gateway
  */
 
-import axios, { type AxiosInstance, type AxiosError } from 'axios';
+import axios, { type AxiosInstance, type AxiosError } from "axios";
+import { toast } from "react-toastify";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
-const API_GATEWAY = import.meta.env.VITE_API_GATEWAY || '/api/v1';
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+const API_GATEWAY = import.meta.env.VITE_API_GATEWAY || "/api/v1";
 
 // Crear instancia de axios
 const apiClient: AxiosInstance = axios.create({
   baseURL: `${API_BASE_URL}${API_GATEWAY}`,
   timeout: 30000,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
@@ -23,9 +25,9 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     if (error.response) {
-      console.error('API Error:', error.response.status, error.response.data);
+      console.error("API Error:", error.response.status, error.response.data);
     } else if (error.request) {
-      console.error('Network Error:', error.message);
+      console.error("Network Error:", error.message);
     }
     return Promise.reject(error);
   }
@@ -89,7 +91,7 @@ export const api = {
    * Obtener artículos procesados
    */
   async getProcessedArticles(limit: number = 50): Promise<ProcessedArticle[]> {
-    const response = await apiClient.get('/text-processor/articles', {
+    const response = await apiClient.get("/text-processor/articles", {
       params: { limit },
     });
     return response.data;
@@ -99,34 +101,50 @@ export const api = {
    * Obtener estadísticas de procesamiento
    */
   async getProcessingStats(): Promise<any> {
-    const response = await apiClient.get('/text-processor/stats');
+    const response = await apiClient.get("/text-processor/stats");
     return response.data;
   },
 
   /**
    * Calcular correlación
    */
-  async calculateCorrelation(request: CorrelationRequest): Promise<CorrelationResponse> {
-    const response = await apiClient.post('/correlation/correlate', request);
+  async calculateCorrelation(
+    request: CorrelationRequest
+  ): Promise<CorrelationResponse> {
+    const response = await apiClient.post("/correlation/correlate", request);
     return response.data;
   },
 
   /**
    * Obtener datos históricos de COLCAP
    */
-  async getColcapData(startDate: string, endDate: string): Promise<ColcapData[]> {
-    const response = await apiClient.get(`/correlation/colcap/${startDate}/${endDate}`);
+  async getColcapData(
+    startDate: string,
+    endDate: string
+  ): Promise<ColcapData[]> {
+    const response = await apiClient.get(
+      `/correlation/colcap/${startDate}/${endDate}`
+    );
     return response.data;
   },
 
   /**
    * Listar resultados de correlación
    */
-  async getCorrelationResults(limit: number = 20): Promise<CorrelationResponse[]> {
-    const response = await apiClient.get('/correlation/results', {
+  async getCorrelationResults(
+    limit: number = 20
+  ): Promise<CorrelationResponse[]> {
+    const response = await apiClient.get("/correlation/results", {
       params: { limit },
     });
     return response.data.results || [];
+  },
+
+  /**
+   * Eliminar resultado de correlación
+   */
+  async deleteCorrelationResult(jobId: string): Promise<void> {
+    await apiClient.delete(`/correlation/results/${jobId}`);
   },
 
   /**
@@ -134,12 +152,54 @@ export const api = {
    */
   async healthCheck(): Promise<boolean> {
     try {
-      await apiClient.get('/health');
+      await apiClient.get("/health");
       return true;
     } catch {
       return false;
     }
   },
+};
+
+// ========================
+// Notificaciones
+// ========================
+export const notify = {
+  success: (message: string) =>
+    toast.success(message, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    }),
+  error: (message: string) =>
+    toast.error(message, {
+      position: "top-right",
+      autoClose: 4000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    }),
+  info: (message: string) =>
+    toast.info(message, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    }),
+  warning: (message: string) =>
+    toast.warn(message, {
+      position: "top-right",
+      autoClose: 3500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    }),
 };
 
 export default apiClient;

@@ -60,23 +60,26 @@ frontend/
 ### Tipografía
 
 **Fuentes**:
+
 - **Headings**: Days One (Google Fonts) - Profesional y distintiva
 - **Body**: Rubik (Google Fonts) - Legible y moderna
 
 **Tamaños**:
+
 ```scss
-$font-size-xs: 0.75rem;    // 12px
-$font-size-sm: 0.875rem;   // 14px
-$font-size-base: 1rem;     // 16px
-$font-size-lg: 1.125rem;   // 18px
-$font-size-xl: 1.25rem;    // 20px
-$font-size-2xl: 1.5rem;    // 24px
-$font-size-3xl: 1.875rem;  // 30px
-$font-size-4xl: 2.25rem;   // 36px
-$font-size-5xl: 3rem;      // 48px
+$font-size-xs: 0.75rem; // 12px
+$font-size-sm: 0.875rem; // 14px
+$font-size-base: 1rem; // 16px
+$font-size-lg: 1.125rem; // 18px
+$font-size-xl: 1.25rem; // 20px
+$font-size-2xl: 1.5rem; // 24px
+$font-size-3xl: 1.875rem; // 30px
+$font-size-4xl: 2.25rem; // 36px
+$font-size-5xl: 3rem; // 48px
 ```
 
 **Pesos**:
+
 ```scss
 $font-weight-light: 300;
 $font-weight-normal: 400;
@@ -88,38 +91,42 @@ $font-weight-bold: 700;
 ### Paleta de Colores
 
 **Colores primarios**:
-```scss
-$primary-color: #1e40af;      // Deep Blue - marca principal
-$primary-light: #3b82f6;      // Hover states
-$primary-dark: #1e3a8a;       // Active states
 
-$secondary-color: #059669;    // Emerald - énfasis
+```scss
+$primary-color: #1e40af; // Deep Blue - marca principal
+$primary-light: #3b82f6; // Hover states
+$primary-dark: #1e3a8a; // Active states
+
+$secondary-color: #059669; // Emerald - énfasis
 $secondary-light: #10b981;
 $secondary-dark: #047857;
 ```
 
 **Colores de estado**:
+
 ```scss
-$success-color: #059669;      // Verde - éxito
-$danger-color: #dc2626;       // Rojo - errores
-$warning-color: #f59e0b;      // Ámbar - advertencias
-$info-color: #0ea5e9;         // Cyan - información
+$success-color: #059669; // Verde - éxito
+$danger-color: #dc2626; // Rojo - errores
+$warning-color: #f59e0b; // Ámbar - advertencias
+$info-color: #0ea5e9; // Cyan - información
 ```
 
 **Colores de texto**:
+
 ```scss
-$text-primary: #111827;       // Negro - texto principal
-$text-secondary: #6b7280;     // Gris - texto secundario
-$text-tertiary: #9ca3af;      // Gris claro - metadata
-$text-inverse: #ffffff;       // Blanco - texto sobre oscuro
+$text-primary: #111827; // Negro - texto principal
+$text-secondary: #6b7280; // Gris - texto secundario
+$text-tertiary: #9ca3af; // Gris claro - metadata
+$text-inverse: #ffffff; // Blanco - texto sobre oscuro
 ```
 
 **Colores de fondo**:
+
 ```scss
-$bg-primary: #ffffff;         // Blanco - fondo principal
-$bg-secondary: #f9fafb;       // Gris muy claro
-$bg-tertiary: #f3f4f6;        // Gris claro
-$bg-dark: #111827;            // Negro - fondos oscuros (CTA)
+$bg-primary: #ffffff; // Blanco - fondo principal
+$bg-secondary: #f9fafb; // Gris muy claro
+$bg-tertiary: #f3f4f6; // Gris claro
+$bg-dark: #111827; // Negro - fondos oscuros (CTA)
 ```
 
 ### Espaciado
@@ -127,24 +134,24 @@ $bg-dark: #111827;            // Negro - fondos oscuros (CTA)
 Sistema de espaciado consistente basado en múltiplos de 4px:
 
 ```scss
-$spacing-xs: 0.25rem;   // 4px
-$spacing-sm: 0.5rem;    // 8px
-$spacing-md: 1rem;      // 16px
-$spacing-lg: 1.5rem;    // 24px
-$spacing-xl: 2rem;      // 32px
-$spacing-2xl: 3rem;     // 48px
-$spacing-3xl: 4rem;     // 64px
+$spacing-xs: 0.25rem; // 4px
+$spacing-sm: 0.5rem; // 8px
+$spacing-md: 1rem; // 16px
+$spacing-lg: 1.5rem; // 24px
+$spacing-xl: 2rem; // 32px
+$spacing-2xl: 3rem; // 48px
+$spacing-3xl: 4rem; // 64px
 ```
 
 ### Border Radius
 
 ```scss
-$radius-sm: 0.25rem;    // 4px
-$radius-md: 0.5rem;     // 8px
-$radius-lg: 0.75rem;    // 12px
-$radius-xl: 1rem;       // 16px
-$radius-2xl: 1.5rem;    // 24px
-$radius-full: 9999px;   // Círculo
+$radius-sm: 0.25rem; // 4px
+$radius-md: 0.5rem; // 8px
+$radius-lg: 0.75rem; // 12px
+$radius-xl: 1rem; // 16px
+$radius-2xl: 1.5rem; // 24px
+$radius-full: 9999px; // Círculo
 ```
 
 ### Sombras
@@ -173,6 +180,7 @@ $transition-all: all 250ms ease;
 **Ubicación**: `src/components/Navbar.tsx`
 
 **Características**:
+
 - Fijo en la parte superior (`position: fixed`)
 - Altura: 70px
 - Logo clickable (navegación a Home)
@@ -181,11 +189,13 @@ $transition-all: all 250ms ease;
 - Active state para página actual
 
 **Propiedades**:
+
 ```typescript
 // Sin props - navegación global
 ```
 
 **Estilos**: `Navbar.scss`
+
 - Background: `$bg-primary` con `backdrop-filter: blur(10px)`
 - Shadow: `$shadow-md`
 - Z-index: 1000
@@ -197,12 +207,14 @@ $transition-all: all 250ms ease;
 **Ubicación**: `src/components/Footer.tsx`
 
 **Características**:
+
 - Pie de página con sitemap
 - Información de copyright
 - Enlaces externos (GitHub, documentación)
 - Logo y descripción breve
 
 **Estructura**:
+
 ```
 ┌─────────────────────────────────────┐
 │ Logo          Navegación    Recursos│
@@ -221,12 +233,14 @@ $transition-all: all 250ms ease;
 **Ubicación**: `src/components/CorrelationChart.tsx`
 
 **Características**:
+
 - Visualización de correlaciones con Chart.js
 - Barras horizontales para cada métrica
 - Colores: verde (correlación positiva), rojo (negativa)
 - Tooltips con p-values
 
 **Props**:
+
 ```typescript
 interface CorrelationChartProps {
   correlations: Record<string, number>;
@@ -235,6 +249,7 @@ interface CorrelationChartProps {
 ```
 
 **Ejemplo**:
+
 ```tsx
 <CorrelationChart
   correlations={{ volume: 0.75, keywords: 0.82, sentiment: -0.23 }}
@@ -257,13 +272,14 @@ interface CorrelationChartProps {
    - Título principal: "Análisis de Correlación Noticias-Mercado"
    - Descripción del sistema
    - CTA button: "Iniciar análisis"
-   
 2. **Features Grid** (3 columnas)
+
    - Adquisición de datos
    - Procesamiento inteligente
    - Análisis estadístico
 
 3. **System Status**
+
    - Estado de servicios (health check)
    - Indicadores visuales (verde/rojo)
    - Última actualización
@@ -274,6 +290,7 @@ interface CorrelationChartProps {
    - Separado visualmente con `$bg-dark`
 
 **Características**:
+
 - Animaciones CSS (fadeIn, slideUp)
 - Carga de estado del sistema en useEffect
 - Notificaciones no duplicadas (flag de control)
@@ -286,32 +303,37 @@ interface CorrelationChartProps {
 **Archivo**: `src/pages/AnalysisPage.tsx`
 
 **Funcionalidad**:
+
 - Configuración de parámetros de análisis
 - Cálculo de correlación en tiempo real
 - Visualización de resultados
 
 **Formulario**:
+
 ```typescript
 interface FormState {
-  startDate: string;      // YYYY-MM-DD
-  endDate: string;        // YYYY-MM-DD
-  lagDays: number;        // 0-30
-  selectedMetrics: string[];  // ['volume', 'keywords', 'sentiment']
+  startDate: string; // YYYY-MM-DD
+  endDate: string; // YYYY-MM-DD
+  lagDays: number; // 0-30
+  selectedMetrics: string[]; // ['volume', 'keywords', 'sentiment']
 }
 ```
 
 **Campos**:
+
 - **Fecha de inicio**: `<input type="date">`
 - **Fecha de fin**: `<input type="date">`
 - **Días de lag**: `<input type="number" min="0" max="30">`
 - **Métricas**: Checkboxes múltiples
 
 **Validaciones**:
+
 - Fechas requeridas
 - Fecha inicio < Fecha fin
 - Al menos 1 métrica seleccionada
 
 **Flujo**:
+
 1. Usuario completa formulario
 2. Click en "Calcular correlación"
 3. Loading state (botón deshabilitado)
@@ -320,6 +342,7 @@ interface FormState {
 6. Renderizado de resultados con gráfico
 
 **Resultados mostrados**:
+
 - Job ID
 - Tamaño de muestra
 - Gráfico de correlaciones
@@ -333,11 +356,13 @@ interface FormState {
 **Archivo**: `src/pages/ResultsPage.tsx`
 
 **Funcionalidad**:
+
 - Listado de análisis históricos
 - Visualización de resultados previos
 - Exportación a PDF
 
 **Carga de datos**:
+
 ```typescript
 useEffect(() => {
   // GET /api/v1/correlation/results
@@ -346,6 +371,7 @@ useEffect(() => {
 ```
 
 **Estructura de resultado**:
+
 ```
 ┌──────────────────────────────┐
 │ Análisis #1          [PDF ↓] │
@@ -365,12 +391,14 @@ useEffect(() => {
 ```
 
 **Funcionalidad PDF**:
+
 - Botón "Descargar PDF" en cada card
 - Generación con jsPDF
 - Contenido: job_id, fechas, correlaciones, p-values, insights
 - Nombre: `analisis-correlacion-{job_id}.pdf`
 
 **Empty state**:
+
 - Mensaje cuando no hay resultados
 - Icono ilustrativo
 - CTA para realizar primer análisis
@@ -384,17 +412,19 @@ useEffect(() => {
 **Archivo**: `src/services/api.ts`
 
 **Configuración**:
+
 ```typescript
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8000/api/v1',
+  baseURL: "http://localhost:8000/api/v1",
   timeout: 30000,
   headers: {
-    'Content-Type': 'application/json'
-  }
+    "Content-Type": "application/json",
+  },
 });
 ```
 
 **Interceptores**:
+
 - Request: Logging de peticiones
 - Response: Manejo global de errores
 - Error: Notificaciones toast automáticas
@@ -415,6 +445,7 @@ export const getCorrelationResults = async (): Promise<CorrelationResponse[]>
 ```
 
 **Tipos**:
+
 ```typescript
 interface CorrelationRequest {
   start_date: string;
@@ -437,12 +468,13 @@ interface CorrelationResponse {
 ```
 
 **Notificaciones**:
+
 ```typescript
 export const notify = {
   success: (message: string) => toast.success(message),
   error: (message: string) => toast.error(message),
   info: (message: string) => toast.info(message),
-  warning: (message: string) => toast.warn(message)
+  warning: (message: string) => toast.warn(message),
 };
 ```
 
@@ -463,6 +495,7 @@ export const notify = {
 ```
 
 **Navegación**:
+
 - Declarativa con `<Link to="/path">`
 - Programática con `useNavigate()`
 
@@ -473,10 +506,10 @@ export const notify = {
 ### Breakpoints
 
 ```scss
-$breakpoint-sm: 640px;   // Móvil grande
-$breakpoint-md: 768px;   // Tablet
-$breakpoint-lg: 1024px;  // Desktop pequeño
-$breakpoint-xl: 1280px;  // Desktop grande
+$breakpoint-sm: 640px; // Móvil grande
+$breakpoint-md: 768px; // Tablet
+$breakpoint-lg: 1024px; // Desktop pequeño
+$breakpoint-xl: 1280px; // Desktop grande
 $breakpoint-2xl: 1536px; // Desktop XL
 ```
 
@@ -484,8 +517,10 @@ $breakpoint-2xl: 1536px; // Desktop XL
 
 ```scss
 @mixin responsive($breakpoint) {
-  @if $breakpoint == 'md' {
-    @media (min-width: $breakpoint-md) { @content; }
+  @if $breakpoint == "md" {
+    @media (min-width: $breakpoint-md) {
+      @content;
+    }
   }
 }
 ```
@@ -498,12 +533,13 @@ $breakpoint-2xl: 1536px; // Desktop XL
 - Flex con `flex-wrap`
 
 **Ejemplo**:
+
 ```scss
 .features-grid {
   display: grid;
   grid-template-columns: 1fr; // Móvil: 1 columna
   gap: $spacing-lg;
-  
+
   @media (min-width: $breakpoint-md) {
     grid-template-columns: repeat(3, 1fr); // Desktop: 3 columnas
   }
@@ -517,20 +553,24 @@ $breakpoint-2xl: 1536px; // Desktop XL
 ### Características implementadas
 
 1. **Semántica HTML**
+
    - Tags apropiados (`<header>`, `<main>`, `<nav>`, `<footer>`)
    - Jerarquía de headings correcta (h1 → h2 → h3)
 
 2. **Navegación por teclado**
+
    - Focus visible en todos los elementos interactivos
    - Tab order lógico
    - Skip links (futuro)
 
 3. **Screen readers**
+
    - `aria-label` en iconos
    - `alt` text en imágenes
    - `sr-only` class para texto oculto visualmente
 
 4. **Contraste de colores**
+
    - Ratio mínimo WCAG AA (4.5:1 para texto)
    - Verificado con herramientas de contraste
 
@@ -544,62 +584,82 @@ $breakpoint-2xl: 1536px; // Desktop XL
 ## Heurísticas de Usabilidad (Nielsen)
 
 ### 1. Visibilidad del estado del sistema
+
 ✅ Implementado:
+
 - Loading spinners durante peticiones
 - Notificaciones toast de éxito/error
 - System status en HomePage
 - Botones disabled durante procesamiento
 
 ### 2. Relación sistema-mundo real
+
 ✅ Implementado:
+
 - Lenguaje claro y no técnico
 - Iconos representativos
 - Fechas en formato comprensible
 
 ### 3. Control y libertad del usuario
+
 ✅ Implementado:
+
 - Navegación clara con navbar
 - Botón de "volver" en páginas
 - Cancelación de formularios
 
 ### 4. Consistencia y estándares
+
 ✅ Implementado:
+
 - Design system unificado
 - Botones con mismos estilos
 - Patrones de interacción consistentes
 
 ### 5. Prevención de errores
+
 ✅ Implementado:
+
 - Validación de formularios antes de submit
 - Input types apropiados (date, number)
 - Min/max en campos numéricos
 
 ### 6. Reconocimiento vs. recuerdo
+
 ✅ Implementado:
+
 - Labels descriptivos en formularios
 - Placeholder text informativos
 - Tooltips en iconos
 
 ### 7. Flexibilidad y eficiencia de uso
+
 ✅ Implementado:
+
 - Valores por defecto razonables
 - Checkboxes pre-seleccionados
 - Atajos de teclado (futuro)
 
 ### 8. Diseño estético y minimalista
+
 ✅ Implementado:
+
 - Sin elementos superfluos
 - Espaciado generoso
 - Jerarquía visual clara
 
 ### 9. Ayuda para errores
+
 ✅ Implementado:
+
 - Mensajes de error descriptivos
 - Notificaciones con contexto
 - Sugerencias de corrección
 
 ### 10. Ayuda y documentación
+
 🚧 Parcialmente implementado:
+
 - Placeholder text como guías
 - Tooltips (futuro)
 - Documentación externa (este archivo)
@@ -611,14 +671,17 @@ $breakpoint-2xl: 1536px; // Desktop XL
 ### Optimizaciones
 
 1. **Code splitting**
+
    - Lazy loading de rutas (futuro)
    - Dynamic imports
 
 2. **Memoización**
+
    - `useMemo` para cálculos costosos
    - `useCallback` para callbacks
 
 3. **Reducción de re-renders**
+
    - State local vs. global
    - Componentes puros donde posible
 
@@ -667,11 +730,13 @@ CMD ["nginx", "-g", "daemon off;"]
 ## Testing (Futuro)
 
 ### Unit Tests
+
 - Jest + React Testing Library
 - Tests de componentes
 - Tests de utilidades
 
 ### E2E Tests
+
 - Playwright o Cypress
 - Flujos críticos
 - Responsive testing
