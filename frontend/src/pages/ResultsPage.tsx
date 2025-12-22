@@ -6,6 +6,7 @@
 
 import { useEffect, useState } from 'react';
 import { api, type CorrelationResponse } from '../services/api';
+import jsPDF from 'jspdf';
 import './ResultsPage.scss';
 
 const ResultsPage = () => {
@@ -28,6 +29,65 @@ const ResultsPage = () => {
     fetchResults();
   }, []);
 
+  const downloadPDF = (result: CorrelationResponse, index: number) => {
+    const doc = new jsPDF();
+    
+    // Header
+    doc.setFontSize(20);
+    doc.text('News2Market - Análisis de Correlación', 20, 20);
+    
+    // Analysis info
+    doc.setFontSize(12);
+    doc.text(`Análisis #${index + 1}`, 20, 35);
+    doc.text(`Job ID: ${result.job_id}`, 20, 45);
+    doc.text(`Tamaño de muestra: ${result.sample_size} días`, 20, 55);
+    
+    // Correlations
+    doc.setFontSize(14);
+    doc.text('Correlaciones:', 20, 70);
+    doc.setFontSize(11);
+    
+    let yPos = 80;
+    Object.entries(result.correlations).forEach(([metric, value]) => {
+      doc.text(`${metric}: ${value.toFixed(3)}`, 30, yPos);
+      yPos += 10;
+    });
+    
+    // P-values
+    if (result.p_values && Object.keys(result.p_values).length > 0) {
+      doc.setFontSize(14);
+      doc.text('P-values:', 20, yPos + 10);
+      doc.setFontSize(11);
+      yPos += 20;
+      
+      Object.entries(result.p_values).forEach(([metric, value]) => {
+        doc.text(`${metric}: ${value.toFixed(4)}`, 30, yPos);
+        yPos += 10;
+      });
+    }
+    
+    // Insights
+    if (result.insights && result.insights.length > 0) {
+      doc.setFontSize(14);
+      doc.text('Insights:', 20, yPos + 10);
+      doc.setFontSize(10);
+      yPos += 20;
+      
+      result.insights.forEach((insight, idx) => {
+        const lines = doc.splitTextToSize(`${idx + 1}. ${insight}`, 170);
+        doc.text(lines, 30, yPos);
+        yPos += lines.length * 7;
+        
+        if (yPos > 270) {
+          doc.addPage();
+          yPos = 20;
+        }
+      });
+    }
+    
+    doc.save(`analisis-correlacion-${result.job_id.slice(0, 8)}.pdf`);
+  };
+
   if (loading) {
     return (
       <div className="loading">
@@ -43,13 +103,13 @@ const ResultsPage = () => {
   return (
     <div className="results-page">
       <header className="page-header">
-        <h1>📈 Resultados históricos</h1>
+        <h1>Resultados históricos</h1>
         <p>Análisis de correlación realizados anteriormente</p>
       </header>
 
       {results.length === 0 ? (
         <div className="empty-state card">
-          <span className="empty-icon">📂</span>
+          <span className="empty-icon">—</span>
           <h3>No hay resultados disponibles</h3>
           <p>Realiza tu primer análisis de correlación para ver resultados aquí</p>
         </div>
@@ -59,7 +119,16 @@ const ResultsPage = () => {
             <div key={index} className="result-card card">
               <div className="result-header">
                 <h3>Análisis #{index + 1}</h3>
-                <span className="job-id">{result.job_id.slice(0, 8)}</span>
+                <div className="header-actions">
+                  <span className="job-id">{result.job_id.slice(0, 8)}</span>
+                  <button 
+                    className="button secondary small"
+                    onClick={() => downloadPDF(result, index)}
+                    title="Descargar PDF"
+                  >
+                    Descargar PDF
+                  </button>
+                </div>
               </div>
 
               <div className="result-meta">
