@@ -222,7 +222,8 @@ async def calculate_correlation(request: CorrelationRequest):
             correlations=correlations,
             p_values=p_values,
             sample_size=len(colcap_data),
-            insights=insights
+            insights=insights,
+            lag_days=request.lag_days
         )
         
         logger.info(f"✅ Análisis completado: job_id={job_id}")
