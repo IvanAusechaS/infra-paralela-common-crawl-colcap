@@ -8,12 +8,16 @@
   background: $bg-dark;
   color: $text-inverse;
   margin-top: auto;
-  padding: $spacing-3xl $spacing-xl $spacing-xl;
+  padding: $spacing-3xl $spacing-lg $spacing-xl;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 .footer-container {
   max-width: 1400px;
   margin: 0 auto;
+  padding: 0 1rem;
 }
 
 .footer-content {
