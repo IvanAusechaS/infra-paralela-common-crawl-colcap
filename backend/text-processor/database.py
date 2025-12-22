@@ -8,7 +8,7 @@ Autor: Equipo News2Market
 Versión: 1.0.0
 """
 
-from sqlalchemy import create_engine, Column, Integer, String, Text, Float, DateTime, JSON, Boolean
+from sqlalchemy import create_engine, Column, Integer, String, Text, Float, DateTime, JSON, Boolean, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
@@ -79,7 +79,7 @@ def check_db_health() -> bool:
     """Verificar conexión a base de datos"""
     try:
         db = SessionLocal()
-        db.execute("SELECT 1")
+        db.execute(text("SELECT 1"))
         db.close()
         return True
     except Exception as e:

@@ -107,9 +107,9 @@ app = FastAPI(
 class ArticleInput(BaseModel):
     """Modelo de entrada para procesamiento de un artículo"""
     article_id: int = Field(..., description="ID del artículo en la base de datos")
-    title: str = Field(..., description="Título del artículo")
     content: str = Field(..., description="Contenido HTML del artículo")
-    url: str = Field(..., description="URL del artículo")
+    title: Optional[str] = Field(None, description="Título del artículo")
+    url: Optional[str] = Field(None, description="URL del artículo")
     published_date: Optional[str] = Field(None, description="Fecha de publicación")
     domain: Optional[str] = Field(None, description="Dominio de origen")
 

@@ -99,7 +99,11 @@ class SystemVerifier:
             response = requests.get(url, timeout=10)
             if response.status_code == 200:
                 data = response.json()
-                if isinstance(data, list) and len(data) > 0:
+                # El servicio devuelve un objeto con 'data' que contiene la lista
+                if isinstance(data, dict) and 'data' in data:
+                    data_points = data.get('data_points', 0)
+                    return True, f"COLCAP data obtenida: {data_points} registros"
+                elif isinstance(data, list) and len(data) > 0:
                     return True, f"COLCAP data obtenida: {len(data)} registros"
                 return False, "Respuesta vacía o formato incorrecto"
             return False, f"Error HTTP {response.status_code}"
