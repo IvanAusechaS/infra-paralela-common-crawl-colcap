@@ -5,6 +5,8 @@
  */
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import HomePage from './pages/HomePage';
 import AnalysisPage from './pages/AnalysisPage';
 import ResultsPage from './pages/ResultsPage';
@@ -23,6 +25,7 @@ function App() {
             <Route path="/results" element={<ResultsPage />} />
           </Routes>
         </main>
+        <ToastContainer />
       </div>
     </Router>
   );
