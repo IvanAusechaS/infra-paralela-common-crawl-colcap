@@ -1,0 +1,35 @@
+¿Qué NO es este proyecto?
+Esto NO es:
+Un sistema de Big Data tipo Google
+Un motor de búsqueda
+Un sistema de IA complejo
+Un proyecto solo teórico
+Esto SÍ es:
+Un prototipo funcional
+Que procese datos reales
+Que corra distribuido
+Que demuestre paralelismo y escalabilidad
+Que esté contenedorizado y orquestado con Kubernetes
+Que use infraestructura en la nube (AWS)
+Lo más importante para el profesor: la arquitectura y el despliegue, no tanto la sofisticación del análisis estadístico.
+
+¿Qué conceptos del curso AWS Cloud Foundations se espera que usen?
+Del curso AWS Cloud Foundations, normalmente se cubre:
+Infraestructura
+EC2 → máquinas virtuales
+VPC → red
+Security Groups → firewall
+IAM → roles y permisos
+EBS / S3 → almacenamiento
+Contenedores
+Docker
+ECR (Elastic Container Registry)
+EKS (Elastic Kubernetes Service)
+Escalabilidad
+Auto Scaling
+Load Balancers
+Horizontal scaling
+Observabilidad
+CloudWatch (logs, métricas)
+Conceptos de monitoreo
+Este proyecto es el momento donde TODO eso se conecta.

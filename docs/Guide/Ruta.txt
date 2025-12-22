@@ -1,0 +1,195 @@
+Interpretación correcta del enunciado (lo que realmente evalúan)
+Requisito
+Cómo se evidencia
+Ejecución concurrente
+Jobs o workers procesando noticias en paralelo
+Contenedores
+Dockerfiles y contenedores separados
+Orquestación
+Kubernetes (EKS)
+Escalabilidad
+Aumentar pods y ver mejora en tiempos
+Datos reales
+Common Crawl o scraping de noticias
+Pipeline
+Ingesta → limpieza → análisis → resultados
+Análisis
+Correlación simple con COLCAP
+Nube
+AWS (no local)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Arquitectura propuesta (la clave del proyecto)
+Vista general (conceptual)
+┌─────────────┐
+│  Frontend   │  React
+│   (React)   │
+└──────┬──────┘
+       │ HTTP
+┌──────▼──────┐
+│   API       │  FastAPI / Node
+│  Gateway    │
+└──────┬──────┘
+       │
+┌──────▼─────────┐
+│ Message Queue  │  (Redis / RabbitMQ)
+└──────┬─────────┘
+       │
+┌──────▼──────────┐
+│ Processing Pods │  Python workers
+│ (N réplicas)    │
+└──────┬──────────┘
+       │
+┌──────▼──────────┐
+│  Database       │ PostgreSQL
+└─────────────────┘
+Todo esto:
+En contenedores Docker
+Orquestado con Kubernetes (EKS)
+Desplegado en AWS
+
+Lenguajes y tecnologías recomendadas (realistas)
+Backend / Procesamiento
+Python ✅ (muy recomendado)
+Por qué:
+Excelente para procesamiento de texto
+Librerías para WARC (Common Crawl)
+Fácil paralelismo
+Ideal para prototipos académicos
+Librerías:
+warcio → leer archivos WARC
+BeautifulSoup → parsear HTML
+pandas → análisis
+numpy
+scipy → correlación
+yfinance o CSV de COLCAP
+API
+FastAPI (Python) o Node.js (Express/Nest)
+FastAPI encaja mejor si todo es Python.
+Base de datos
+PostgreSQL (en contenedor)
+O RDS PostgreSQL (más “cloud real”)
+Mensajería (clave para paralelismo)
+Redis (como cola)
+O RabbitMQ
+Frontend
+React
+Charts: Recharts o Chart.js
+
+
+
+
+Pipeline de procesamiento (muy importante para la nota)
+Etapa 1: Ingesta de datos
+Opciones válidas:
+Descargar un subconjunto de Common Crawl
+O scraping de medios colombianos (El Tiempo, Semana, etc.)
+NO necesitan procesar TBs. Con unos miles de artículos basta.
+Etapa 2: Limpieza
+Eliminar HTML
+Normalizar texto
+Quitar stopwords
+Fechas, títulos, fuente
+Etapa 3: Análisis
+Ejemplos simples pero válidos:
+Conteo de palabras clave (inflación, dólar, desempleo)
+Sentimiento (positivo / negativo)
+Frecuencia de noticias por día
+Etapa 4: Correlación
+Tomar COLCAP diario
+Calcular:
+Correlación de Pearson
+Comparar picos noticiosos vs movimientos del índice
+No necesitan predicción, solo correlación.
+
+
+
+
+
+
+
+
+
+¿Cómo demostrar paralelismo y escalabilidad? (CRÍTICO)
+¿Qué deben mostrar?
+1 pod → X segundos
+3 pods → menos tiempo
+5 pods → aún menos
+¿Cómo hacerlo?
+Kubernetes Deployment con réplicas
+Workers toman tareas desde una cola
+Medir:
+Tiempo total
+CPU / memoria
+Número de tareas procesadas
+Métricas
+Logs con timestamps
+kubectl top pods
+CloudWatch
+Kubernetes en AWS (EKS)
+Infraestructura mínima
+1 cluster EKS
+2–3 nodos EC2 pequeños
+ECR para imágenes Docker
+Security Groups bien configurados
+Componentes Kubernetes
+Deployment → API
+Deployment → workers
+Service → API
+ConfigMap → configuración
+HorizontalPodAutoscaler (opcional, punto extra)
+
+
+
+¿Qué se espera ver en el VIDEO? (20 min)
+Estructura sugerida del video:
+Introducción (2 min)
+Problema
+Objetivo
+Arquitectura (5 min)
+Diagrama
+Explicación de microservicios
+Kubernetes
+Demo técnica (8 min)
+Desplegar pods
+Aumentar réplicas
+Ejecutar análisis
+Mostrar resultados
+Resultados y métricas (3 min)
+Tiempos
+Uso de recursos
+Comparación
+Conclusiones (2 min)
+
+División del trabajo en el grupo
+Rol
+Responsabilidad
+Integrante 1
+Infraestructura AWS + EKS + Frontend
+Integrante 2
+Backend + pipeline
+Integrante 3
+Workers + análisis + visualización
+
+
+Resumen claro
+✔ Lenguaje principal: Python
+✔ Frontend: React
+✔ Infraestructura: AWS (EKS, EC2, ECR, S3)
+✔ Orquestación: Kubernetes
+✔ Paralelismo: workers + cola
+✔ Objetivo académico: demostrar arquitectura distribuida funcional

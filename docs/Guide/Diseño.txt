@@ -1,0 +1,131 @@
+Nombre del proyecto
+📊 News2Market
+Plataforma distribuida para el análisis y correlación de eventos noticiosos y mercados financieros.
+
+Diseño
+Concepto visual
+Icono principal:
+Un gráfico de líneas (mercado)
+Con un globo de diálogo / documento (noticias)
+Conectados por nodos (infraestructura distribuida)
+Colores (sobrios, académicos)
+Azul oscuro (#1E3A8A) → tecnología / confianza
+Gris claro (#E5E7EB) → neutralidad académica
+Verde suave (#10B981) → economía / crecimiento
+Tipografía
+Sans-serif limpia:
+Inter
+Roboto
+Montserrat
+Texto que pueden decir en la presentación:
+“El logo representa la convergencia entre información noticiosa y mercados financieros, procesada a través de una infraestructura distribuida.”
+
+
+
+
+
+
+
+Diagrama exacto del sistema (para diapositivas y README)
+┌─────────────────────┐
+│     Frontend        │
+│      React          │
+│ (News2Market UI)    │
+└─────────┬───────────┘
+          │ HTTP
+┌─────────▼───────────┐
+│   API Gateway       │
+│     FastAPI         │
+└─────────┬───────────┘
+          │
+┌─────────▼───────────┐
+│  Message Queue      │
+│   (Redis)           │
+└─────────┬───────────┘
+          │
+┌─────────▼───────────┐
+│ Processing Workers  │  ← Escalables
+│ (Python Pods)       │
+└─────────┬───────────┘
+          │
+┌─────────▼───────────┐
+│   PostgreSQL        │
+└─────────────────────┘
+Servicios AWS involucrados
+EC2 → nodos del clúster
+EKS → orquestación
+ECR → imágenes Docker
+S3 → datasets
+CloudWatch → métricas y logs
+IAM → permisos
+
+Flujo de trabajo ideal para 3 integrantes (muy importante)
+Andrey — Frontend Lead
+Responsabilidad principal: Experiencia de usuario y visualización
+Tareas:
+UI en React
+Gráficos (líneas, barras, correlaciones)
+Comunicación con API
+Estética del proyecto
+Página de resultados
+Entregables:
+/frontend
+Dashboard funcional
+Mockups iniciales
+Estilos globales
+Iván — DevOps & Cloud Lead
+Responsabilidad principal: Infraestructura y despliegue
+Tareas:
+Dockerfiles
+docker-compose (local)
+Kubernetes manifests
+AWS EKS
+ECR
+CloudWatch
+Guía de despliegue
+Entregables:
+/infra
+/k8s
+Scripts de despliegue
+Documentación AWS
+Felipe — Backend & Data Lead
+Responsabilidad principal: Lógica y procesamiento
+Tareas:
+API (FastAPI)
+Workers distribuidos
+Pipeline de datos
+Análisis y correlación
+Base de datos
+Entregables:
+/backend
+/workers
+Pipeline funcional
+Endpoints documentados
+
+Flujo de trabajo (cómo trabajan juntos)
+Herramientas
+GitHub
+Issues + Projects
+Branches por rol
+Branching recomendado
+main
+│
+├── frontend/*
+├── backend/*
+├── infra/*
+Flujo de ejecución del sistema (para explicar en el video)
+Usuario selecciona intervalo de fechas
+Frontend envía solicitud
+API crea tareas
+Workers procesan en paralelo
+Resultados se almacenan
+Frontend visualiza correlación
+Frase clave para el video:
+“El paralelismo se logra mediante múltiples pods de procesamiento que consumen tareas desde una cola distribuida.”
+Qué es clave en la demostración
+✔ Arquitectura clara
+✔ Roles bien definidos
+✔ Escalabilidad demostrable
+✔ Buen diseño visual
+✔ Documentación limpia
+✔ Uso correcto de AWS

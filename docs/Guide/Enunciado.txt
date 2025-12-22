@@ -1,0 +1,53 @@
+Enunciado proyecto final de curso - Infraestructuras Paralelas y Distribuidas
+John Sanabria - john.sanabria@correounivalle.edu.co 
+Motivación del proyecto
+El objetivo principal de este proyecto es poner en práctica algunos de los temas que se abordan en el curso de Infraestructuras Paralelas y Distribuidas entre los cuales se encuentran:
+Ejecución concurrente de aplicaciones
+Despliegue de servicios basados en contenedores 
+Uso de orquestadores de contenedores
+El desarrollo de este proyecto permitirá a los estudiantes integrar los conceptos teóricos de cómputo paralelo y distribuido con la implementación práctica de arquitecturas escalables basadas en contenedores.
+Descripción del proyecto
+Introducción
+
+La cantidad de información que se generó en el 2024 cada día en el mundo fue de alrededor de 402.74 millones de terabytes (0.4 zettabytes). Tal volumen de información se debe a diferentes aspectos como: creciente actividad digital, internet de las cosas, inteligencia artificial, redes 5G, etc. Este volumen de información diario representa desafíos significativos en términos de almacenamiento, procesamiento y análisis eficiente de datos. En este contexto, el acceso a conjuntos de datos web abiertos y masivos se ha convertido en un recurso estratégico para la investigación académica, el desarrollo tecnológico y la innovación en el campo de la inteligencia artificial y la analítica de datos.
+Common Crawl es una iniciativa sin ánimo de lucro que proporciona un repositorio abierto y gratuito de datos web a gran escala. Desde 2008, esta organización realiza procesos periódicos de rastreo (web crawling) que recopilan miles de millones de páginas web de todo el mundo. Los resultados de cada rastreo se publican en formatos estandarizados, principalmente WARC (Web ARChive), que almacenan el contenido completo de las páginas (HTML, metadatos, enlaces y encabezados HTTP) y permiten conservar una “fotografía” del estado de la web en un momento determinado.
+A diferencia de los motores de búsqueda comerciales, Common Crawl no realiza un rastreo en tiempo real, sino que lleva a cabo procesos mensuales o bimensuales, donde cada ciclo de recolección abarca aproximadamente 3 a 5 mil millones de páginas. Una vez completado cada crawl, los datos se procesan, se eliminan duplicados, se indexan y se liberan públicamente a través de servicios en la nube, e.g. AWS S3. 
+Motivación
+El valor de Common Crawl radica en su capacidad para proporcionar un acceso a los datos que permite un análisis temporal de los mismos. Los datos al momento abarcan más de una década de recolecciones. 
+Common Crawl no ofrece información en tiempo real (dado que los conjuntos de datos disponibles suelen tener una latencia de 4 a 8 semanas desde la captura hasta su publicación), su estructura y volumen lo hacen idóneo para procesamientos a gran escala. Esto permite abordar problemáticas como:
+La exploración de tendencias temáticas o de opinión a lo largo del tiempo
+El análisis de vínculos y redes de información entre sitios
+La extracción de conocimiento semántico a partir de texto
+La experimentación con arquitecturas de cómputo masivo en entornos distribuidos
+En el marco de este proyecto, podemos decir que Common Crawl nos permitirá explorar los ítems 1, 2 y 4; puesto que se debe desarrollar un prototipo de software que permita correlacionar hechos noticiosos sucedidos en un intervalo de tiempo y su posible relación con indicadores económicos nacionales (por ejemplo, el índice COLCAP). El prototipo se debe desarrollar usando tecnología de contenedores desplegado en un ambiente de Kubernetes en la nube. 
+Entregable del proyecto final
+Desarrollar un prototipo funcional de software distribuido que permita procesar y analizar información noticiosa proveniente de fuentes abiertas (por ejemplo, Common Crawl o portales de noticias nacionales) con el fin de identificar correlaciones entre hechos mediáticos ocurridos en un intervalo de tiempo y su posible relación con indicadores económicos del país, e.g. ICOLCAP.
+El prototipo deberá estar implementado mediante tecnologías de contenedores, y desplegado y ejecutado en un entorno orquestado con Kubernetes en la nube, demostrando la aplicación práctica de conceptos de programación paralela y distribuida, escalabilidad, tolerancia a fallos y orquestación de servicios.
+Adendo
+2025/11/28
+Se debe presentar un video de una duración no superior a los 20 minutos donde se evidencie que se cumple con los objetivos de este proyecto
+Integrantes
+El proyecto se puede hacer en grupos de máximo 4 integrantes por grupo.
+Objetivo general
+Diseñar e implementar un prototipo de software distribuido y escalable que procese, analice y correlacione información noticiosa y económica en un entorno de cómputo paralelo basado en contenedores orquestados con Kubernetes en la nube.
+Objetivos específicos
+Aplicar conceptos fundamentales de computación paralela y distribuida en el diseño de arquitecturas orientadas al procesamiento de grandes volúmenes de datos.
+Explorar y utilizar fuentes abiertas de información web, e.g. Common Crawl.
+Diseñar una arquitectura distribuida modular, basada en contenedores Docker, que permita el despliegue y la ejecución de tareas de procesamiento en paralelo bajo un sistema de orquestación, e.g. Kubernetes.
+Implementar un pipeline de procesamiento de datos, que integre etapas de:
+adquisición o lectura distribuida de datos,
+limpieza y transformación,
+análisis o correlación con variables económicas (por ejemplo, indicadores bursátiles como el índice COLCAP).
+Evaluar el desempeño y la escalabilidad del prototipo, analizando métricas como uso de recursos, tiempos de ejecución, paralelismo efectivo y eficiencia en la distribución de tareas.
+Documentar y presentar los resultados obtenidos, destacando los aportes del proyecto en términos de:
+procesamiento distribuido de datos reales,
+uso de tecnologías de orquestación de contenedores, y
+comprensión de la relación entre infraestructura técnica y análisis de información masiva.
+Referencias sugeridas:
+Common Crawl Foundation. https://commoncrawl.org
+Kubernetes Documentation. https://kubernetes.io/docs 
+Docker Documentation. https://docs.docker.com 
+https://grok.com/share/bGVnYWN5_cfd72442-1352-4e61-a235-e7805a72711f - john.sanabria@correounivalle.edu.co
+https://chatgpt.com/share/68cadfaa-0d18-8012-8592-88c064cbc4fd 
+
+
