@@ -7,9 +7,10 @@
 import axios, { type AxiosInstance, type AxiosError } from "axios";
 import { toast } from "react-toastify";
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
-const API_GATEWAY = import.meta.env.VITE_API_GATEWAY || "/api/v1";
+// Usar ruta relativa para aprovechar el proxy de nginx
+// El proxy de nginx redirige /api -> api-gateway-service:8000
+const API_BASE_URL = "";
+const API_GATEWAY = "/api/v1";
 
 // Crear instancia de axios
 const apiClient: AxiosInstance = axios.create({
