@@ -1,0 +1,126 @@
+# ====================
+# EKS Cluster Configuration - LEARNER LAB OPTIMIZED
+# ====================
+# Configuración de costo mínimo para AWS Learner Lab ($50 USD budget)
+# Uso: eksctl create cluster -f cluster-config-learner-lab.yaml
+
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: news2market-cluster
+  region: us-east-1  # Región más económica
+  version: "1.28"
+
+# Usar VPC default del Learner Lab (no crear una nueva)
+# vpc:
+#   id: "vpc-xxxxxxxx"  # Se detecta automáticamente
+
+# Grupo de nodos MÍNIMO para reducir costos
+managedNodeGroups:
+  - name: worker-nodes
+    # t3.medium = 2 vCPU, 4 GB RAM ($0.0416/hora)
+    instanceType: t3.medium
+    
+    # Solo 2 nodos para minimizar costos
+    desiredCapacity: 2
+    minSize: 2
+    maxSize: 3  # Permitir 1 nodo extra para HPA demo
+    
+    # Volumen mínimo por nodo
+    volumeSize: 20  # GB (suficiente para el proyecto)
+    volumeType: gp3
+    
+    # Subnets PÚBLICAS para evitar NAT Gateway ($$$)
+    privateNetworking: false
+    
+    # SSH access (opcional, útil para debugging)
+    ssh:
+      allow: false  # Desactivar para seguridad
+    
+    # Labels para organización
+    labels:
+      role: worker
+      environment: learner-lab
+      project: news2market
+    
+    # Tags para identificación en AWS Console
+    tags:
+      Name: news2market-worker
+      Project: news2market
+      Environment: learner-lab
+      ManagedBy: eksctl
+      CostCenter: education
+    
+    # Políticas IAM mínimas necesarias
+    iam:
+      withAddonPolicies:
+        autoScaler: true      # Para HPA (Horizontal Pod Autoscaler)
+        ebs: true             # Para persistent volumes
+        efs: false            # No necesario
+        albIngress: false     # No usar ALB (costoso)
+        cloudWatch: false     # Ahorrar costos, usar kubectl logs
+        externalDNS: false    # No necesario
+
+# Addons esenciales (sin costos extra)
+addons:
+  - name: vpc-cni           # Networking
+    version: latest
+  - name: coredns           # DNS interno
+    version: latest
+  - name: kube-proxy        # Networking
+    version: latest
+
+# Logging DESACTIVADO para ahorrar costos
+# CloudWatch Logs cobra $0.50/GB ingerido
+cloudWatch:
+  clusterLogging:
+    enableTypes: []  # Sin logs (usar kubectl logs en su lugar)
+
+# Metadata adicional
+availabilityZones:
+  - us-east-1a
+  - us-east-1b
+
+# Git ops (opcional, para CI/CD avanzado)
+# git:
+#   repo:
+#     url: "https://github.com/tu-usuario/infra-paralela-common-crawl-colcap.git"
+
+---
+
+# ====================
+# NOTAS DE USO
+# ====================
+#
+# COSTO ESTIMADO (por hora):
+# - EKS Control Plane: $0.10/h
+# - 2x t3.medium:      $0.0832/h
+# - EBS (40 GB):       ~$0.005/h
+# - Data Transfer:     ~variable
+# TOTAL:               ~$0.20/h ($4.80/día, $33/semana)
+#
+# COMANDOS:
+#
+# 1. Crear cluster:
+#    eksctl create cluster -f cluster-config-learner-lab.yaml
+#
+# 2. Verificar:
+#    kubectl get nodes
+#    kubectl cluster-info
+#
+# 3. Ver costos (después de crear):
+#    aws ce get-cost-and-usage \
+#      --time-period Start=2025-01-01,End=2025-01-31 \
+#      --granularity DAILY \
+#      --metrics UnblendedCost
+#
+# 4. ELIMINAR (IMPORTANTE al terminar):
+#    eksctl delete cluster --name news2market-cluster --region us-east-1
+#
+# ALTERNATIVA MÁS BARATA (t3.small):
+# - Si el límite de vCPUs es bajo, cambiar a t3.small (1 vCPU, 2 GB)
+# - Costo: $0.0208/hora por instancia
+# - Limitación: Menos recursos para demos de escalabilidad
+#
+# ====================

@@ -19,10 +19,15 @@ from typing import List, Optional, Dict
 logger = logging.getLogger(__name__)
 
 # Configuración de base de datos
-DATABASE_URL = os.getenv(
-    'DATABASE_URL',
-    'postgresql://user:password@localhost:5432/newsdb'
-)
+DATABASE_URL = os.getenv('DATABASE_URL')
+if not DATABASE_URL:
+    # Construir desde variables individuales si DATABASE_URL no existe
+    user = os.getenv('DATABASE_USER', 'user')
+    password = os.getenv('DATABASE_PASSWORD', 'password')
+    host = os.getenv('DATABASE_HOST', 'localhost')
+    port = os.getenv('DATABASE_PORT', '5432')
+    name = os.getenv('DATABASE_NAME', 'newsdb')
+    DATABASE_URL = f'postgresql://{user}:{password}@{host}:{port}/{name}'
 
 # Crear engine
 engine = create_engine(DATABASE_URL, pool_pre_ping=True, pool_size=10, max_overflow=20)

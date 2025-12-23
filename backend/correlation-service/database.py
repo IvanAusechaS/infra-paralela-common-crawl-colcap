@@ -18,10 +18,15 @@ import os
 logger = logging.getLogger(__name__)
 
 # Configuración de base de datos
-DATABASE_URL = os.getenv(
-    'DATABASE_URL',
-    'postgresql+asyncpg://news2market:password@localhost:5432/news2market'
-)
+DATABASE_URL = os.getenv('DATABASE_URL')
+if not DATABASE_URL:
+    # Construir desde variables individuales si DATABASE_URL no existe
+    user = os.getenv('DATABASE_USER', 'news2market')
+    password = os.getenv('DATABASE_PASSWORD', 'password')
+    host = os.getenv('DATABASE_HOST', 'localhost')
+    port = os.getenv('DATABASE_PORT', '5432')
+    name = os.getenv('DATABASE_NAME', 'news2market')
+    DATABASE_URL = f'postgresql+asyncpg://{user}:{password}@{host}:{port}/{name}'
 
 engine = create_async_engine(DATABASE_URL, echo=False)
 AsyncSessionLocal = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)

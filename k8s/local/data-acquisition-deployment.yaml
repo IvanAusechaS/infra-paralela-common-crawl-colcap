@@ -1,0 +1,141 @@
+# ====================
+# Data Acquisition Deployment
+# ====================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-acquisition
+  namespace: news2market
+  labels:
+    app: data-acquisition
+    tier: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: data-acquisition
+  template:
+    metadata:
+      labels:
+        app: data-acquisition
+        tier: backend
+    spec:
+      containers:
+      - name: data-acquisition
+        image: news2market/data-acquisition:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8001
+          name: http
+        env:
+        - name: SERVICE_PORT
+          value: "8001"
+        - name: ENV
+          valueFrom:
+            configMapKeyRef:
+              name: news2market-config
+              key: ENV
+        - name: USE_MOCK_MODE
+          value: "true"
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: news2market-secrets
+              key: AWS_ACCESS_KEY_ID
+              optional: true
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: news2market-secrets
+              key: AWS_SECRET_ACCESS_KEY
+              optional: true
+        - name: AWS_DEFAULT_REGION
+          value: "us-east-1"
+        - name: COMMON_CRAWL_MODE
+          value: "auto"
+        - name: COMMON_CRAWL_BUCKET
+          value: "commoncrawl"
+        - name: MAX_RECORDS_PER_FILE
+          value: "20"
+        - name: MAX_WARC_FILES
+          value: "3"
+        - name: MAX_TOTAL_RECORDS
+          value: "50"
+
+        - name: DATABASE_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: news2market-config
+              key: DATABASE_HOST
+        - name: DATABASE_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: news2market-config
+              key: DATABASE_PORT
+        - name: DATABASE_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: news2market-config
+              key: DATABASE_NAME
+        - name: DATABASE_USER
+          valueFrom:
+            secretKeyRef:
+              name: news2market-secrets
+              key: DATABASE_USER
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: news2market-secrets
+              key: DATABASE_PASSWORD
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: news2market-config
+              key: LOG_LEVEL
+        - name: LOG_FORMAT
+          value: "json"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8001
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8001
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+
+---
+# ====================
+# Data Acquisition Service
+# ====================
+apiVersion: v1
+kind: Service
+metadata:
+  name: data-acquisition-service
+  namespace: news2market
+  labels:
+    app: data-acquisition
+spec:
+  type: ClusterIP
+  selector:
+    app: data-acquisition
+  ports:
+  - port: 8001
+    targetPort: 8001
+    protocol: TCP
+    name: http
+  sessionAffinity: None
