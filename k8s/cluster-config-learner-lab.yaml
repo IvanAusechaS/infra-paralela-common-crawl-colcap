@@ -10,7 +10,7 @@ kind: ClusterConfig
 metadata:
   name: news2market-cluster
   region: us-east-1  # Región más económica
-  version: "1.28"
+  version: "1.29"
 
 # Usar VPC default del Learner Lab (no crear una nueva)
 # vpc:

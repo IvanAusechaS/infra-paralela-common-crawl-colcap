@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: correlation-service
+  namespace: news2market
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: correlation-service
+  template:
+    metadata:
+      labels:
+        app: correlation-service
+    spec:
+      containers:
+      - name: correlation-service
+        image: ivanausecha/correlation-service:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8003
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "128Mi"
+          limits:
+            cpu: "150m"
+            memory: "256Mi"
+        env:
+        - name: POSTGRES_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: news2market-config
+              key: POSTGRES_HOST
+        - name: POSTGRES_DB
+          valueFrom:
+            configMapKeyRef:
+              name: news2market-config
+              key: POSTGRES_DB
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: news2market-secrets
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: news2market-secrets
+              key: POSTGRES_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: correlation-service
+  namespace: news2market
+spec:
+  selector:
+    app: correlation-service
+  ports:
+  - port: 8003
+    targetPort: 8003
