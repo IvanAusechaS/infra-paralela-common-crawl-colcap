@@ -82,7 +82,9 @@ async def lifespan(app: FastAPI):
         logger.info("✅ Base de datos inicializada")
         
         # Inicializar Redis
-        redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+        redis_host = os.getenv('REDIS_HOST', 'localhost')
+        redis_port = os.getenv('REDIS_PORT', '6379')
+        redis_url = os.getenv('REDIS_URL', f'redis://{redis_host}:{redis_port}/0')
         redis_queue = RedisQueue(redis_url)
         await redis_queue.connect()
         logger.info("✅ Conexión a Redis establecida")

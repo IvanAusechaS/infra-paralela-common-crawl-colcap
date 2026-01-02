@@ -23,9 +23,9 @@ app.add_middleware(
 
 # Configuración desde variables de entorno
 SERVICES = {
-    "data": os.getenv("DATA_SERVICE_URL", "http://localhost:8001"),
-    "process": os.getenv("PROCESS_SERVICE_URL", "http://localhost:8002"),
-    "correlate": os.getenv("CORRELATION_SERVICE_URL", "http://localhost:8003")
+    "data": os.getenv("DATA_ACQUISITION_URL", "http://localhost:8001"),
+    "process": os.getenv("TEXT_PROCESSOR_URL", "http://localhost:8002"),
+    "correlate": os.getenv("CORRELATION_URL", "http://localhost:8003")
 }
 
 # Modelo para la petición
