@@ -1,0 +1,71 @@
+# ====================
+# EKS Cluster Configuration
+# ====================
+# Use with: eksctl create cluster -f cluster-config.yaml
+
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: news2market-cluster
+  region: us-east-1
+  version: "1.28"
+
+# Grupos de nodos
+nodeGroups:
+  # Nodo group para servicios principales
+  - name: main-nodes
+    instanceType: t3.medium
+    desiredCapacity: 3
+    minSize: 2
+    maxSize: 5
+    volumeSize: 30
+    privateNetworking: false
+    labels:
+      role: main
+    tags:
+      environment: production
+      project: news2market
+    iam:
+      withAddonPolicies:
+        autoScaler: true
+        cloudWatch: true
+        ebs: true
+        efs: true
+
+  # Nodo group para workers de procesamiento
+  - name: worker-nodes
+    instanceType: t3.large
+    desiredCapacity: 2
+    minSize: 1
+    maxSize: 10
+    volumeSize: 50
+    labels:
+      role: worker
+    tags:
+      environment: production
+      project: news2market
+      autoscaling: enabled
+    iam:
+      withAddonPolicies:
+        autoScaler: true
+        cloudWatch: true
+
+# Configuración de addons
+addons:
+  - name: vpc-cni
+    version: latest
+  - name: coredns
+    version: latest
+  - name: kube-proxy
+    version: latest
+
+# CloudWatch logging
+cloudWatch:
+  clusterLogging:
+    enableTypes:
+      - api
+      - audit
+      - authenticator
+      - controllerManager
+      - scheduler

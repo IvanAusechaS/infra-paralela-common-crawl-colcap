@@ -1,0 +1,221 @@
+/**
+ * ResultsPage Styles
+ */
+
+@use "../styles/global.scss" as *;
+
+.results-page {
+  animation: fadeIn 0.5s ease-in;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 48px;
+
+  h1 {
+    margin-bottom: 12px;
+  }
+
+  p {
+    font-size: 18px;
+    color: $text-secondary;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 64px 24px;
+
+  .empty-icon {
+    font-size: 64px;
+    display: block;
+    margin-bottom: 24px;
+  }
+
+  h3 {
+    margin-bottom: 12px;
+    color: $text-primary;
+  }
+
+  p {
+    color: $text-secondary;
+  }
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 24px;
+}
+
+.result-card {
+  .result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid $border-color;
+
+    h3 {
+      margin: 0;
+      color: $text-primary;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .job-id {
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      padding: 4px 8px;
+      background: rgba($primary-color, 0.1);
+      color: $primary-color;
+      border-radius: 4px;
+    }
+
+    .button.small {
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+  }
+
+  .result-meta {
+    margin-bottom: 24px;
+
+    .meta-item {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+
+      .meta-label {
+        font-weight: 600;
+        color: $text-secondary;
+      }
+
+      .meta-value {
+        color: $text-primary;
+      }
+    }
+  }
+
+  .correlations {
+    margin-bottom: 24px;
+
+    h4 {
+      font-size: 16px;
+      margin-bottom: 12px;
+      color: $text-primary;
+    }
+  }
+
+  .correlation-item {
+    display: grid;
+    grid-template-columns: 100px 1fr 60px;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+
+    .metric-name {
+      font-size: 13px;
+      color: $text-secondary;
+      text-transform: capitalize;
+    }
+
+    .correlation-bar {
+      height: 24px;
+      background: $bg-secondary;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+
+      .bar-fill {
+        height: 100%;
+        transition: width 0.5s ease;
+
+        &.positive {
+          background: linear-gradient(90deg, $secondary-color, $secondary-dark);
+        }
+
+        &.negative {
+          background: linear-gradient(90deg, $danger-color, #b91c1c);
+        }
+      }
+    }
+
+    .correlation-value {
+      font-family: "Courier New", monospace;
+      font-size: 14px;
+      font-weight: 600;
+      color: $text-primary;
+      text-align: right;
+    }
+  }
+
+  .insights-preview {
+    h4 {
+      font-size: 16px;
+      margin-bottom: 12px;
+      color: $text-primary;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        padding: 8px 12px;
+        margin-bottom: 8px;
+        background: rgba($primary-color, 0.05);
+        border-radius: 6px;
+        font-size: 13px;
+        color: $text-primary;
+        line-height: 1.5;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1024px) {
+  .results-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .result-card .correlation-item {
+    grid-template-columns: 80px 1fr 50px;
+    gap: 8px;
+
+    .metric-name {
+      font-size: 12px;
+    }
+
+    .correlation-value {
+      font-size: 12px;
+    }
+  }
+}

@@ -1,0 +1,90 @@
+/**
+ * Footer Styles - News2Market
+ */
+
+@use "../styles/global.scss" as *;
+
+.footer {
+  background: $bg-dark;
+  color: $text-inverse;
+  margin-top: auto;
+  padding: $spacing-3xl $spacing-lg $spacing-xl;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+.footer-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: $spacing-2xl;
+  margin-bottom: $spacing-2xl;
+
+  @include responsive("md") {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+  }
+}
+
+.footer-section {
+  h3 {
+    font-family: $font-heading;
+    font-size: $font-size-xl;
+    margin-bottom: $spacing-md;
+    background: linear-gradient(135deg, $primary-light, $secondary-light);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  h4 {
+    font-family: $font-heading;
+    font-size: $font-size-base;
+    margin-bottom: $spacing-md;
+    color: $text-inverse;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    color: $text-tertiary;
+    line-height: $line-height-relaxed;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      margin-bottom: $spacing-sm;
+
+      a {
+        color: $text-tertiary;
+        text-decoration: none;
+        font-size: $font-size-sm;
+        transition: $transition-base;
+
+        &:hover {
+          color: $primary-light;
+        }
+      }
+    }
+  }
+}
+
+.footer-bottom {
+  padding-top: $spacing-xl;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+
+  p {
+    font-size: $font-size-sm;
+    color: $text-tertiary;
+    margin: 0;
+  }
+}

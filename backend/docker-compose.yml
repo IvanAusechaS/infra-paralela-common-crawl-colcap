@@ -4,69 +4,55 @@ services:
     build: ./api-gateway
     container_name: api-gateway
     ports:
-      - "8000:8000"  # Puerto principal del sistema
+      - "8000:8000"
     environment:
-      # URLs de los servicios
       - DATA_SERVICE_URL=http://data-acquisition:8001
-      - PROCESS_SERVICE_URL=http://mock-text-processing:8002
-      - CORRELATION_SERVICE_URL=http://mock-correlation:8003
-      
-      # Configuración
+      - PROCESS_SERVICE_URL=http://text-processor:8002
+      - CORRELATION_SERVICE_URL=http://correlation-service:8003
       - ENV=development
       - LOG_LEVEL=INFO
       - API_GATEWAY_HOST=0.0.0.0
       - API_GATEWAY_PORT=8000
-      
-      # Timeouts
       - HTTP_TIMEOUT=30
       - CONNECT_TIMEOUT=5
       - READ_TIMEOUT=25
     volumes:
-      - ./api-gateway:/app  # Hot reload para desarrollo
+      - ./api-gateway:/app
     command: uvicorn app:app --host 0.0.0.0 --port 8000 --reload
     depends_on:
       - data-acquisition
-      - mock-text-processing
-      - mock-correlation
+      - text-processor
+      - correlation-service
+      - redis
+      - postgres
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
   
-  # =========== DATA ACQUISITION (SERVICIO REAL) ===========
+  # =========== DATA ACQUISITION ===========
   data-acquisition:
     build: ./data-acquisition
     container_name: data-acquisition
     ports:
-      - "8001:8001"  # Acceso directo para pruebas
+      - "8001:8001"
     environment:
-      # Configuración principal
       - ENV=development
-      - USE_MOCK_MODE=true  # Modo mock para desarrollo
-      
-      # AWS config (solo para modo S3)
+      - USE_MOCK_MODE=true
       - AWS_ACCESS_KEY_ID=none
       - AWS_SECRET_ACCESS_KEY=none
       - AWS_DEFAULT_REGION=us-east-1
-      
-      # Common Crawl config
-      - COMMON_CRAWL_MODE=auto  # auto, s3, http, mock
+      - COMMON_CRAWL_MODE=auto
       - COMMON_CRAWL_BUCKET=commoncrawl
-      
-      # Límites para pruebas
       - MAX_RECORDS_PER_FILE=20
       - MAX_WARC_FILES=3
       - MAX_TOTAL_RECORDS=50
-      
-      # Database
-      - DATABASE_URL=postgresql://user:password@postgres/newsdb
-      
-      # Logging
+      - DATABASE_URL=postgresql://news2market:password@postgres/news2market
       - LOG_LEVEL=INFO
       - LOG_FORMAT=json
     volumes:
-      - ./data-acquisition:/app  # Montar código para hot-reload
+      - ./data-acquisition:/app
       - ./data:/app/data
     command: >
       sh -c "python -c 'from database import init_db; init_db()' &&
@@ -75,199 +61,92 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      test: ["CMD-SHELL", "curl -f http://localhost:8001/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
   
-  # =========== SERVICIOS MOCK (PARA TEXT-PROCESSING Y CORRELATION) ===========
-  mock-text-processing:
-    image: python:3.11-slim
-    container_name: mock-text-processing
+  # =========== TEXT PROCESSOR ===========
+  text-processor:
+    build: ./text-processor
+    container_name: text-processor
     ports:
       - "8002:8002"
-    working_dir: /app
-    environment:
-      - SERVICE_NAME=text-processing
-      - SERVICE_PORT=8002
-      - MOCK_MODE=true
+    env_file:
+      - ./text-processor/.env
     volumes:
-      - ./mock-services:/app  # Puedes crear esta carpeta
-    command: >
-      sh -c "
-      echo 'Instalando dependencias...' &&
-      pip install fastapi uvicorn pydantic &&
-      echo 'Creando servicio mock...' &&
-      cat > app.py << 'EOF'
-      from fastapi import FastAPI
-      from pydantic import BaseModel
-      from typing import List, Dict, Optional
-      import logging
-      from datetime import datetime
-      
-      logging.basicConfig(level=logging.INFO)
-      logger = logging.getLogger(__name__)
-      
-      app = FastAPI(title=\"Mock Text Processing Service\")
-      
-      class ProcessRequest(BaseModel):
-          articles: List[Dict]
-          language: Optional[str] = \"es\"
-      
-      @app.get(\"/\")
-      async def root():
-          return {\"service\": \"mock-text-processing\", \"status\": \"running\"}
-      
-      @app.get(\"/health\")
-      async def health():
-          return {\"status\": \"healthy\", \"service\": \"mock-text-processing\"}
-      
-      @app.post(\"/process\")
-      async def process(request: ProcessRequest):
-          logger.info(f\"Procesando {len(request.articles)} artículos (mock)\")
-          
-          processed = []
-          for i, article in enumerate(request.articles):
-              processed.append({
-                  \"id\": f\"processed_{i}\",
-                  \"original_id\": article.get(\"id\", f\"orig_{i}\"),
-                  \"cleaned_text\": article.get(\"content\", \"\")[:500],
-                  \"entities\": [\"colombia\", \"economía\", \"colcap\"],
-                  \"sentiment\": 0.7 if i % 2 == 0 else 0.3,
-                  \"keywords\": [\"colombia\", \"economía\", \"mercado\"],
-                  \"language\": request.language,
-                  \"processed_at\": datetime.now().isoformat()
-              })
-          
-          return {
-              \"status\": \"success\",
-              \"processed_count\": len(processed),
-              \"processed_articles\": processed,
-              \"mode\": \"mock\"
-          }
-      EOF
-      
-      echo 'Iniciando servicio...' &&
-      uvicorn app:app --host 0.0.0.0 --port 8002 --reload
-      "
+      - ./text-processor:/app
+    command: uvicorn app:app --host 0.0.0.0 --port 8002 --reload
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      test: ["CMD-SHELL", "curl -f http://localhost:8002/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
   
-  mock-correlation:
-    image: python:3.11-slim
-    container_name: mock-correlation
+  # =========== CORRELATION SERVICE ===========
+  correlation-service:
+    build: ./correlation-service
+    container_name: correlation-service
     ports:
       - "8003:8003"
-    working_dir: /app
-    environment:
-      - SERVICE_NAME=correlation
-      - SERVICE_PORT=8003
-      - MOCK_MODE=true
-    command: >
-      sh -c "
-      echo 'Instalando dependencias...' &&
-      pip install fastapi uvicorn pydantic &&
-      echo 'Creando servicio mock...' &&
-      cat > app.py << 'EOF'
-      from fastapi import FastAPI
-      from pydantic import BaseModel
-      from typing import List, Dict, Optional
-      import logging
-      from datetime import datetime
-      import random
-      
-      logging.basicConfig(level=logging.INFO)
-      logger = logging.getLogger(__name__)
-      
-      app = FastAPI(title=\"Mock Correlation Service\")
-      
-      class CorrelationRequest(BaseModel):
-          articles: List[Dict]
-          start_date: str
-          end_date: str
-      
-      @app.get(\"/\")
-      async def root():
-          return {\"service\": \"mock-correlation\", \"status\": \"running\"}
-      
-      @app.get(\"/health\")
-      async def health():
-          return {\"status\": \"healthy\", \"service\": \"mock-correlation\"}
-      
-      @app.post(\"/correlate\")
-      async def correlate(request: CorrelationRequest):
-          logger.info(f\"Correlacionando {len(request.articles)} artículos (mock)\")
-          
-          # Simular datos de COLCAP
-          dates = [f\"2024-01-{str(i).zfill(2)}\" for i in range(1, 11)]
-          colcap_values = [1200 + random.randint(-50, 50) for _ in range(10)]
-          news_volume = [len(request.articles) // 2 + random.randint(-2, 2) for _ in range(10)]
-          
-          # Calcular correlación mock
-          correlation_score = random.uniform(0.5, 0.9)
-          
-          return {
-              \"status\": \"success\",
-              \"correlation_score\": round(correlation_score, 3),
-              \"p_value\": 0.01,
-              \"interpretation\": \"Correlación positiva moderada\" if correlation_score < 0.7 else \"Correlación positiva fuerte\",
-              \"chart_data\": {
-                  \"dates\": dates,
-                  \"colcap_values\": colcap_values,
-                  \"news_volume\": news_volume
-              },
-              \"articles_analyzed\": len(request.articles),
-              \"mode\": \"mock\"
-          }
-      EOF
-      
-      echo 'Iniciando servicio...' &&
-      uvicorn app:app --host 0.0.0.0 --port 8003 --reload
-      "
+    env_file:
+      - ./correlation-service/.env
+    volumes:
+      - ./correlation-service:/app
+    command: uvicorn app:app --host 0.0.0.0 --port 8003 --reload
+    depends_on:
+      postgres:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      test: ["CMD-SHELL", "curl -f http://localhost:8003/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
   
-  # =========== BASE DE DATOS ===========
+  # =========== POSTGRESQL ===========
   postgres:
-    image: postgres:14
-    container_name: commoncrawl-postgres
+    image: postgres:15
+    container_name: news2market-postgres
     environment:
-      POSTGRES_DB: newsdb
-      POSTGRES_USER: user
+      POSTGRES_DB: news2market
+      POSTGRES_USER: news2market
       POSTGRES_PASSWORD: password
       POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      # Asegúrate de que init-db.sql sea un ARCHIVO, no directorio
-      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro  # :ro = solo lectura
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user -d newsdb"]
+      test: ["CMD-SHELL", "pg_isready -U news2market -d news2market"]
       interval: 10s
       timeout: 5s
       retries: 5
   
-  # =========== REDIS (OPCIONAL, PARA CACHE/COLA) ===========
+  # =========== REDIS ===========
   redis:
     image: redis:7-alpine
-    container_name: commoncrawl-redis
+    container_name: news2market-redis
     ports:
       - "6379:6379"
     command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   
-  # =========== PGADMIN (ADMINISTRACIÓN BD) ===========
+  # =========== PGADMIN ===========
   pgadmin:
     image: dpage/pgadmin4
-    container_name: commoncrawl-pgadmin
+    container_name: news2market-pgadmin
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@commoncrawl.com
+      PGADMIN_DEFAULT_EMAIL: admin@news2market.com
       PGADMIN_DEFAULT_PASSWORD: admin123
     ports:
       - "5050:80"

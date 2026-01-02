@@ -1,0 +1,154 @@
+/**
+ * Navbar Styles - News2Market
+ * Responsive navigation with custom logo and smooth animations
+ */
+
+@use "../styles/global.scss" as *;
+
+.navbar {
+  background: $bg-primary;
+  box-shadow: $shadow-md;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+  animation: slideDown 0.3s ease-out;
+  width: 100%;
+  max-width: 100vw;
+  height: 70px;
+}
+
+.navbar-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: $spacing-md $spacing-xl;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  @include responsive("md") {
+    padding: $spacing-lg $spacing-2xl;
+  }
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  text-decoration: none;
+  color: $text-primary;
+  transition: $transition-base;
+
+  .logo-icon {
+    width: 40px;
+    height: 40px;
+    transition: $transition-base;
+  }
+
+  .logo-text {
+    font-family: $font-heading;
+    font-size: $font-size-xl;
+    background: linear-gradient(135deg, $primary-color, $secondary-color);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+    @include responsive("md") {
+      font-size: $font-size-2xl;
+    }
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+
+    .logo-icon {
+      transform: scale(1.1) rotate(5deg);
+    }
+  }
+}
+
+.navbar-menu {
+  display: flex;
+  gap: $spacing-sm;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  @include responsive("md") {
+    gap: $spacing-md;
+  }
+}
+
+.navbar-link {
+  text-decoration: none;
+  color: $text-secondary;
+  font-family: $font-body;
+  font-weight: $font-weight-medium;
+  font-size: $font-size-sm;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $radius-md;
+  transition: $transition-all;
+  position: relative;
+
+  @include responsive("md") {
+    font-size: $font-size-base;
+    padding: $spacing-sm $spacing-lg;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: $primary-color;
+    transform: translateX(-50%);
+    transition: $transition-base;
+  }
+
+  &:hover {
+    color: $primary-color;
+    background: rgba(30, 64, 175, 0.05);
+
+    &::after {
+      width: 80%;
+    }
+  }
+
+  &.active {
+    color: $primary-color;
+    background: rgba(30, 64, 175, 0.1);
+    font-weight: $font-weight-semibold;
+
+    &::after {
+      width: 80%;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid $primary-color;
+    outline-offset: 2px;
+  }
+}
+
+// Mobile responsive
+@media (max-width: $breakpoint-md) {
+  .navbar-container {
+    flex-direction: column;
+    gap: $spacing-lg;
+    padding: $spacing-md;
+  }
+
+  .navbar-menu {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .navbar-logo .logo-text {
+    font-size: $font-size-lg;
+  }
+}

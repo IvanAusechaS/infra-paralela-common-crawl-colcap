@@ -1,0 +1,84 @@
+/**
+ * CorrelationChart Styles
+ */
+
+@use "../styles/global.scss" as *;
+
+.correlation-chart {
+  width: 100%;
+  padding: 16px 0;
+
+  .custom-tooltip {
+    background: $bg-primary;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: $shadow-md;
+
+    p {
+      margin: 4px 0;
+      font-size: 13px;
+      color: $text-primary;
+
+      &.label {
+        font-weight: 600;
+        text-transform: capitalize;
+        color: $primary-color;
+        margin-bottom: 8px;
+      }
+
+      strong {
+        color: $text-secondary;
+      }
+
+      &.significance {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid $border-color;
+        font-size: 12px;
+      }
+    }
+  }
+
+  .chart-legend {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: $text-secondary;
+
+      .legend-color {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+
+        &.positive {
+          background: $secondary-color;
+        }
+
+        &.negative {
+          background: $danger-color;
+        }
+
+        &.not-significant {
+          background: #9ca3af;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .correlation-chart .chart-legend {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}

@@ -14,10 +14,15 @@ ENV = os.getenv("ENV", "development")
 logger = logging.getLogger(__name__)
 
 # Configuración de base de datos PostgreSQL
-DATABASE_URL = os.getenv(
-    "DATABASE_URL", 
-    "postgresql://admin:admin123@localhost:5432/newsdb"
-)
+DATABASE_URL = os.getenv('DATABASE_URL')
+if not DATABASE_URL:
+    # Construir desde variables individuales si DATABASE_URL no existe
+    user = os.getenv('DATABASE_USER', 'admin')
+    password = os.getenv('DATABASE_PASSWORD', 'admin123')
+    host = os.getenv('DATABASE_HOST', 'localhost')
+    port = os.getenv('DATABASE_PORT', '5432')
+    name = os.getenv('DATABASE_NAME', 'newsdb')
+    DATABASE_URL = f'postgresql://{user}:{password}@{host}:{port}/{name}'
 
 engine = create_engine(
     DATABASE_URL,

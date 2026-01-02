@@ -1,0 +1,219 @@
+/**
+ * API Client - News2Market Frontend
+ *
+ * Cliente HTTP para comunicación con API Gateway
+ */
+
+import axios, { type AxiosInstance, type AxiosError } from "axios";
+import { toast } from "react-toastify";
+
+// Usar ruta relativa para aprovechar el proxy de nginx
+// El proxy de nginx redirige /api -> api-gateway-service:8000
+const API_BASE_URL = "";
+const API_GATEWAY = "/api/v1";
+
+// Crear instancia de axios
+const apiClient: AxiosInstance = axios.create({
+  baseURL: `${API_BASE_URL}${API_GATEWAY}`,
+  timeout: 30000,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Interceptor de respuestas para manejo de errores
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error: AxiosError) => {
+    if (error.response) {
+      console.error("API Error:", error.response.status, error.response.data);
+    } else if (error.request) {
+      console.error("Network Error:", error.message);
+    }
+    return Promise.reject(error);
+  }
+);
+
+// ========================
+// Tipos de datos
+// ========================
+
+export interface Article {
+  id: number;
+  url: string;
+  title: string;
+  content: string;
+  crawled_at: string;
+  status: string;
+}
+
+export interface ProcessedArticle {
+  id: number;
+  article_id: number;
+  cleaned_content: string;
+  word_count: number;
+  economic_keywords: Record<string, number>;
+  sentiment_score: number;
+  entities: string[];
+  processed_at: string;
+}
+
+export interface CorrelationRequest {
+  start_date: string;
+  end_date: string;
+  metrics: string[];
+  lag_days?: number;
+}
+
+export interface CorrelationResponse {
+  job_id: string;
+  correlations: Record<string, number>;
+  p_values: Record<string, number>;
+  insights: string[];
+  sample_size: number;
+}
+
+export interface ColcapData {
+  date: string;
+  opening_price: number;
+  closing_price: number;
+  high_price: number;
+  low_price: number;
+  volume: number;
+  daily_change_percent: number;
+}
+
+// ========================
+// Funciones de API
+// ========================
+
+export const api = {
+  /**
+   * Obtener artículos procesados
+   */
+  async getProcessedArticles(limit: number = 50): Promise<ProcessedArticle[]> {
+    const response = await apiClient.get("/text-processor/articles", {
+      params: { limit },
+    });
+    return response.data;
+  },
+
+  /**
+   * Obtener estadísticas de procesamiento
+   */
+  async getProcessingStats(): Promise<any> {
+    const response = await apiClient.get("/text-processor/stats");
+    return response.data;
+  },
+
+  /**
+   * Obtener workers activos
+   */
+  async getActiveWorkers(): Promise<{ active_workers: number; workers: any[] }> {
+    try {
+      const response = await apiClient.get("/text-processor/workers/active");
+      return response.data;
+    } catch (error) {
+      console.error("Error getting active workers:", error);
+      return { active_workers: 0, workers: [] };
+    }
+  },
+
+  /**
+   * Calcular correlación
+   */
+  async calculateCorrelation(
+    request: CorrelationRequest
+  ): Promise<CorrelationResponse> {
+    const response = await apiClient.post("/correlation/correlate", request);
+    return response.data;
+  },
+
+  /**
+   * Obtener datos históricos de COLCAP
+   */
+  async getColcapData(
+    startDate: string,
+    endDate: string
+  ): Promise<ColcapData[]> {
+    const response = await apiClient.get(
+      `/correlation/colcap/${startDate}/${endDate}`
+    );
+    return response.data;
+  },
+
+  /**
+   * Listar resultados de correlación
+   */
+  async getCorrelationResults(
+    limit: number = 20
+  ): Promise<CorrelationResponse[]> {
+    const response = await apiClient.get("/correlation/results", {
+      params: { limit },
+    });
+    return response.data.results || [];
+  },
+
+  /**
+   * Eliminar resultado de correlación
+   */
+  async deleteCorrelationResult(jobId: string): Promise<void> {
+    await apiClient.delete(`/correlation/results/${jobId}`);
+  },
+
+  /**
+   * Health check
+   */
+  async healthCheck(): Promise<boolean> {
+    try {
+      await apiClient.get("/health");
+      return true;
+    } catch {
+      return false;
+    }
+  },
+};
+
+// ========================
+// Notificaciones
+// ========================
+export const notify = {
+  success: (message: string) =>
+    toast.success(message, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    }),
+  error: (message: string) =>
+    toast.error(message, {
+      position: "top-right",
+      autoClose: 4000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    }),
+  info: (message: string) =>
+    toast.info(message, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    }),
+  warning: (message: string) =>
+    toast.warn(message, {
+      position: "top-right",
+      autoClose: 3500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    }),
+};
+
+export default apiClient;
